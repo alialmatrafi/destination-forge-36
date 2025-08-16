@@ -66,15 +66,39 @@ const extractTravelInfo = (message: string): { destination?: string; days?: numb
   let days = 0;
   const dayPatterns = [
     /(\d+)\s*(?:يوم|أيام|day|days)/gi,
-    /(?:لمدة|for)\s*(\d+)/gi,
-    /(\d+)\s*(?:ليلة|ليال|night|nights)/gi
+    /(?:لمدة|for)\s*(\d+)\s*(?:يوم|أيام|day|days)/gi,
+    /(\d+)\s*(?:ليلة|ليال|night|nights)/gi,
+    /(?:مدة|duration|period)\s*(\d+)/gi,
+    /(\d+)\s*(?:أيام|days)\s*(?:في|to|at)/gi,
+    /(?:خلال|during)\s*(\d+)\s*(?:يوم|أيام|day|days)/gi
   ];
   
   for (const pattern of dayPatterns) {
-    const match = text.match(pattern);
-    if (match) {
-      days = parseInt(match[1]) || 0;
-      break;
+    const matches = text.match(pattern);
+    if (matches) {
+      // Get the first capturing group from the match
+      const dayMatch = pattern.exec(text);
+      if (dayMatch && dayMatch[1]) {
+        days = parseInt(dayMatch[1]) || 0;
+        if (days > 0) break;
+      }
+    }
+  }
+  
+  // Additional fallback patterns for Arabic numbers
+  if (days === 0) {
+    const arabicNumbers = {
+      'خمسة': 5, 'أربعة': 4, 'ثلاثة': 3, 'اثنين': 2, 'واحد': 1,
+      'ستة': 6, 'سبعة': 7, 'ثمانية': 8, 'تسعة': 9, 'عشرة': 10,
+      'five': 5, 'four': 4, 'three': 3, 'two': 2, 'one': 1,
+      'six': 6, 'seven': 7, 'eight': 8, 'nine': 9, 'ten': 10
+    };
+    
+    for (const [word, num] of Object.entries(arabicNumbers)) {
+      if (text.includes(word)) {
+        days = num;
+        break;
+      }
     }
   }
   
@@ -427,13 +451,15 @@ export const generateAIResponse = async ({ message, conversationHistory = [] }: 
 - الميزانية: ${budget}
 - عدد الأشخاص: ${groupSize}
 
-تعليمات إجبارية - يجب اتباعها بدقة:
+تعليمات إجبارية - يجب اتباعها بدقة تماماً:
 
 1. يجب أن تكتب نصاً وصفياً مفيداً أولاً (بدون ذكر JSON)
-2. ثم يجب أن تضع JSON بالتنسيق المحدد تماماً
-3. يجب إنشاء جدول لـ ${days} أيام بالضبط
-4. يجب أن تكون الوجهة مناسبة لنوع الرحلة: ${travelType}
-5. يجب أن تكون التكاليف مناسبة للميزانية: ${budget}
+2. ثم يجب أن تضع JSON بالتنسيق المحدد تماماً  
+3. يجب إنشاء جدول لـ ${days} أيام بالضبط - لا أكثر ولا أقل
+4. عدد الأيام المطلوب هو ${days} أيام فقط
+5. لا تغير عدد الأيام مهما كان السبب
+6. يجب أن تكون الوجهة مناسبة لنوع الرحلة: ${travelType}
+7. يجب أن تكون التكاليف مناسبة للميزانية: ${budget}
 **مثال على التنسيق المطلوب:**
 
 مرحباً! سأساعدك في التخطيط لرحلة رائعة. إليك خطة مفصلة تناسب احتياجاتك.
@@ -484,12 +510,15 @@ export const generateAIResponse = async ({ message, conversationHistory = [] }: 
 \`\`\`
 
 **قواعد إجبارية:**
-- يجب إنشاء ${days} أيام بالضبط
+- يجب إنشاء ${days} أيام بالضبط - هذا مطلب أساسي
+- عدد الأيام في الجدول = ${days} (لا تغير هذا الرقم)
 - استخدم فقط هذه الأنواع: "culture", "food", "transport", "shopping"
 - التكاليف يجب أن تكون أرقام صحيحة فقط
 - لا تذكر كلمة JSON في النص الوصفي
 - يجب وضع JSON داخل \`\`\`json و \`\`\`
-- لا تضع أي نص بعد JSON`;
+- لا تضع أي نص بعد JSON
+
+تذكر: المستخدم طلب ${days} أيام، يجب أن يكون الجدول ${days} أيام فقط!`;
 
       const result = await model.generateContent(itineraryPrompt);
       const response = result.response;
