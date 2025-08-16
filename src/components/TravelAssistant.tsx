@@ -100,7 +100,7 @@ export const TravelAssistant = () => {
       // Generate AI response
       const aiResponse = await generateAIResponse({
         message: content,
-        conversationHistory
+        conversationHistory: conversationHistory
       });
 
       // Add AI message with itinerary data
