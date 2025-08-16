@@ -34,6 +34,7 @@ const SYSTEM_PROMPT = `أنت مساعد سفر ذكي ومتخصص باللغة
 - قدم خطة يومية مفصلة
 - اذكر التكاليف التقريبية
 - اقترح أنشطة متنوعة (ثقافية، ترفيهية، طعام، تسوق)
+- اقترح أنشطة متنوعة (ثقافية، ترفيهية، طعام، نقل)
 - كن ودوداً ومفيداً
 
 إذا طلب المستخدم خطة سفر، قدم الرد بتنسيق JSON يحتوي على:
@@ -54,7 +55,7 @@ const SYSTEM_PROMPT = `أنت مساعد سفر ذكي ومتخصص باللغة
         "activity": "اسم النشاط",
         "location": "وصف المكان",
         "cost": 25,
-        "type": "culture" // أو "food" أو "shopping" أو "transport"
+        "type": "culture" // أو "food" أو "transport"
       }
     ]
   }
@@ -185,7 +186,7 @@ export const generateAIResponse = async ({ message, conversationHistory = [] }: 
   ]
 }
 
-أنواع الأنشطة المتاحة: "culture", "food", "shopping", "transport"`;
+أنواع الأنشطة المتاحة: "culture", "food", "transport"`;
 
         const itineraryResult = await model.generateContent(itineraryPrompt);
         const itineraryText = itineraryResult.response.text();
@@ -252,7 +253,7 @@ export const getModificationSuggestions = async (currentItinerary: any[], userRe
     return suggestions.length > 0 ? suggestions : [
       "إضافة جولة طعام محلية",
       "تضمين مكان لمشاهدة غروب الشمس", 
-      "إضافة وقت للتسوق في الأسواق المحلية"
+      "إضافة وقت للراحة والاستجمام"
     ];
     
   } catch (error) {
@@ -260,7 +261,7 @@ export const getModificationSuggestions = async (currentItinerary: any[], userRe
     return [
       "إضافة جولة طعام محلية",
       "تضمين مكان لمشاهدة غروب الشمس",
-      "إضافة وقت للتسوق في الأسواق المحلية"
+      "إضافة وقت للراحة والاستجمام"
     ];
   }
 };

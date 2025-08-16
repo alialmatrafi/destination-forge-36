@@ -60,8 +60,7 @@
     "types": {
       "culture": "ثقافة",
       "food": "طعام",
-      "transport": "نقل",
-      "shopping": "تسوق"
+      "transport": "نقل"
     }
   },
   "auth": {

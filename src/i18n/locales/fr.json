@@ -59,8 +59,7 @@
     "types": {
       "culture": "culture",
       "food": "nourriture",
-      "transport": "transport",
-      "shopping": "shopping"
+      "transport": "transport"
     }
   },
   "auth": {

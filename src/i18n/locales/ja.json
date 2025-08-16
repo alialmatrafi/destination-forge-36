@@ -59,8 +59,7 @@
     "types": {
       "culture": "文化",
       "food": "食事",
-      "transport": "交通",
-      "shopping": "ショッピング"
+      "transport": "交通"
     }
   },
   "auth": {

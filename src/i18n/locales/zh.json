@@ -59,8 +59,7 @@
     "types": {
       "culture": "文化",
       "food": "美食",
-      "transport": "交通",
-      "shopping": "购物"
+      "transport": "交通"
     }
   },
   "auth": {

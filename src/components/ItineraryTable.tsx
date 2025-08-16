@@ -136,7 +136,6 @@ export const ItineraryTable = ({ itinerary: propItinerary, city = "Tokyo", onEdi
       case "culture": return "bg-travel-blue-light text-travel-blue-dark";
       case "food": return "bg-orange-100 text-orange-700";
       case "transport": return "bg-green-100 text-green-700";
-      case "shopping": return "bg-purple-100 text-purple-700";
       default: return "bg-gray-100 text-gray-700";
     }
   };
@@ -357,7 +356,6 @@ const EditItemForm = ({ item, onSave }: EditItemFormProps) => {
         >
           <option value="culture">Culture</option>
           <option value="food">Food</option>
-          <option value="shopping">Shopping</option>
           <option value="transport">Transport</option>
         </select>
       </div>
