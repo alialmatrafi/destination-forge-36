@@ -212,7 +212,6 @@ export const TravelAssistant = () => {
       );
 
       // Get city info from the message
-      const message = messages.find(msg => msg.id === messageId);
       if (message?.metadata?.city) {
         await conversationService.saveItinerary(
           activeConversation,
