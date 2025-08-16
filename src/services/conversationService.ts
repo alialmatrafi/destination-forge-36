@@ -1,7 +1,5 @@
-import { supabase, Conversation, Message, Itinerary, GuestSession } from '@/lib/supabase';
+import { supabase, hasValidSupabaseConfig, Conversation, Message, Itinerary, GuestSession } from '@/lib/supabase';
 
-// Local storage fallback when Supabase is not configured
-const useLocalStorage = !supabase;
 
 const localStorageService = {
   getConversations(): Conversation[] {
@@ -26,7 +24,7 @@ const localStorageService = {
 export const conversationService = {
   // Create or get guest session
   async ensureGuestSession(): Promise<string> {
-    if (useLocalStorage) {
+    if (!hasValidSupabaseConfig) {
       return 'local-session';
     }
     
@@ -76,7 +74,7 @@ export const conversationService = {
 
   // Create a new conversation
   async createConversation(title: string): Promise<Conversation> {
-    if (useLocalStorage) {
+    if (!hasValidSupabaseConfig) {
       const conversations = localStorageService.getConversations();
       const newConversation: Conversation = {
         id: Date.now().toString(),
@@ -121,7 +119,7 @@ export const conversationService = {
 
   // Migrate guest data to user account when they sign up/in
   async migrateGuestDataToUser(): Promise<void> {
-    if (useLocalStorage) {
+    if (!hasValidSupabaseConfig) {
       return; // No migration needed for local storage
     }
     
@@ -147,7 +145,7 @@ export const conversationService = {
 
   // Update conversation title
   async updateConversation(id: string, title: string): Promise<void> {
-    if (useLocalStorage) {
+    if (!hasValidSupabaseConfig) {
       const conversations = localStorageService.getConversations();
       const index = conversations.findIndex(c => c.id === id);
       if (index !== -1) {
@@ -168,7 +166,7 @@ export const conversationService = {
 
   // Delete a conversation
   async deleteConversation(id: string): Promise<void> {
-    if (useLocalStorage) {
+    if (!hasValidSupabaseConfig) {
       const conversations = localStorageService.getConversations();
       const filtered = conversations.filter(c => c.id !== id);
       localStorageService.saveConversations(filtered);
@@ -186,7 +184,7 @@ export const conversationService = {
 
   // Get messages for a conversation
   async getMessages(conversationId: string): Promise<Message[]> {
-    if (useLocalStorage) {
+    if (!hasValidSupabaseConfig) {
       return localStorageService.getMessages(conversationId);
     }
     
@@ -202,7 +200,7 @@ export const conversationService = {
 
   // Add a message to a conversation
   async addMessage(conversationId: string, content: string, role: 'user' | 'assistant', metadata?: any): Promise<Message> {
-    if (useLocalStorage) {
+    if (!hasValidSupabaseConfig) {
       const messages = localStorageService.getMessages(conversationId);
       const newMessage: Message = {
         id: Date.now().toString(),
@@ -234,7 +232,7 @@ export const conversationService = {
 
   // Save or update itinerary
   async saveItinerary(conversationId: string, city: string, country: string, days: any[], totalCost: number): Promise<Itinerary> {
-    if (useLocalStorage) {
+    if (!hasValidSupabaseConfig) {
       // For local storage, we'll store itinerary data in the message metadata
       return {
         id: Date.now().toString(),
@@ -293,7 +291,7 @@ export const conversationService = {
 
   // Get itinerary for a conversation
   async getItinerary(conversationId: string): Promise<Itinerary | null> {
-    if (useLocalStorage) {
+    if (!hasValidSupabaseConfig) {
       return null; // Itinerary data is stored in message metadata for local storage
     }
     

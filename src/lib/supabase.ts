@@ -3,31 +3,34 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://placeholder.supabase.co';
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'placeholder-key';
 
-// Check if we have valid Supabase configuration
-const hasValidSupabaseConfig = supabaseUrl !== 'https://placeholder.supabase.co' && 
+// Check if we have valid Supabase configuration - more strict validation
+const hasValidSupabaseConfig = supabaseUrl && 
+                               supabaseAnonKey && 
+                               supabaseUrl !== 'https://placeholder.supabase.co' && 
                                supabaseAnonKey !== 'placeholder-key' &&
-                               supabaseUrl.includes('.supabase.co');
+                               supabaseUrl.startsWith('https://') &&
+                               supabaseUrl.includes('.supabase.co') &&
+                               supabaseAnonKey.length > 20;
 
-let supabase: any = null;
+// Only create Supabase client if we have valid configuration
+const supabase = hasValidSupabaseConfig ? createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+  },
+  global: {
+    headers: {
+      'x-session-id': getOrCreateSessionId(),
+    },
+  },
+}) : null;
 
-if (hasValidSupabaseConfig) {
-  supabase = createClient(supabaseUrl, supabaseAnonKey, {
-    auth: {
-      persistSession: true,
-      autoRefreshToken: true,
-    },
-    global: {
-      headers: {
-        'x-session-id': getOrCreateSessionId(),
-      },
-    },
-  });
-} else {
-  console.warn('Supabase not configured. Using local storage fallback.');
+// Log configuration status
+if (!hasValidSupabaseConfig) {
+  console.warn('Supabase not configured properly. Using local storage fallback.');
 }
 
-export { supabase };
-
+export { supabase, hasValidSupabaseConfig };
 // Generate or get existing session ID for guests
 function getOrCreateSessionId(): string {
   let sessionId = localStorage.getItem('guest-session-id');
