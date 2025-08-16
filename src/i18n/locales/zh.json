@@ -49,13 +49,13 @@
     "free": "免费",
     "helpful": "有帮助",
     "notHelpful": "没帮助",
-    "exportPdf": "导出PDF",
+    "exportPdf": "导出PDF"
   },
   "voice": {
     "startRecording": "开始语音录制",
     "stopRecording": "停止语音录制",
     "listening": "正在听...",
-    "notSupported": "此浏览器不支持语音录制"
+    "notSupported": "此浏览器不支持语音录制",
     "types": {
       "culture": "文化",
       "food": "美食",

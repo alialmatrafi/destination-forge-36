@@ -49,13 +49,13 @@
     "free": "無料",
     "helpful": "役に立つ",
     "notHelpful": "役に立たない",
-    "exportPdf": "PDF出力",
+    "exportPdf": "PDF出力"
   },
   "voice": {
     "startRecording": "音声録音を開始",
     "stopRecording": "音声録音を停止",
     "listening": "聞いています...",
-    "notSupported": "このブラウザでは音声録音がサポートされていません"
+    "notSupported": "このブラウザでは音声録音がサポートされていません",
     "types": {
       "culture": "文化",
       "food": "食事",

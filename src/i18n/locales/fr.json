@@ -49,13 +49,13 @@
     "free": "Gratuit",
     "helpful": "Utile",
     "notHelpful": "Pas utile",
-    "exportPdf": "Exporter PDF",
+    "exportPdf": "Exporter PDF"
   },
   "voice": {
     "startRecording": "Commencer l'enregistrement vocal",
     "stopRecording": "Arrêter l'enregistrement vocal",
     "listening": "Écoute...",
-    "notSupported": "Enregistrement vocal non pris en charge dans ce navigateur"
+    "notSupported": "Enregistrement vocal non pris en charge dans ce navigateur",
     "types": {
       "culture": "culture",
       "food": "nourriture",
