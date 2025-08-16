@@ -1,9 +1,9 @@
-import { Mic, MicOff, Loader2 } from "lucide-react";
+import { Mic, MicOff } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { useVoiceRecording } from "@/hooks/useVoiceRecording";
 import { cn } from "@/lib/utils";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 interface VoiceRecordingButtonProps {
   onTranscript: (text: string) => void;
@@ -20,20 +20,25 @@ export const VoiceRecordingButton = ({ onTranscript, disabled }: VoiceRecordingB
     transcript,
     error,
   } = useVoiceRecording();
+  
+  const lastTranscriptRef = useRef<string>('');
 
-  // Send transcript to parent when recording stops and we have text
+  // Send transcript to parent when we get a new one
   useEffect(() => {
-    if (!isRecording && transcript.trim() && transcript !== '') {
-      onTranscript(transcript.trim());
-      // Clear transcript after sending to prevent duplicate sends
-      // This will be handled by the hook internally
+    if (transcript && transcript !== lastTranscriptRef.current && transcript.trim()) {
+      lastTranscriptRef.current = transcript;
+      onTranscript(transcript);
     }
-  }, [isRecording, transcript, onTranscript]);
+  }, [transcript, onTranscript]);
 
   const handleClick = () => {
+    if (disabled) return;
+    
     if (isRecording) {
       stopRecording();
     } else {
+      // Reset last transcript when starting new recording
+      lastTranscriptRef.current = '';
       startRecording();
     }
   };

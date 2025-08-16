@@ -61,7 +61,11 @@ export const ChatArea = ({ messages, onSendMessage, isWelcomeMode, onMenuClick }
   };
 
   const handleVoiceTranscript = (transcript: string) => {
-    setInput(prev => prev + transcript);
+    setInput(prev => {
+      // Add space before new transcript if there's existing text
+      const separator = prev.trim() ? ' ' : '';
+      return prev + separator + transcript;
+    });
     // Auto-resize textarea
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
