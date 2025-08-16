@@ -13,9 +13,9 @@ export const conversationService = {
       .from('guest_sessions')
       .select('id')
       .eq('session_id', sessionId)
-      .single();
+      .limit(1);
 
-    if (!existingSession) {
+    if (!existingSession || existingSession.length === 0) {
       // Create new guest session
       const { data, error } = await supabase
         .from('guest_sessions')
@@ -27,7 +27,7 @@ export const conversationService = {
       return data.id;
     }
 
-    return existingSession.id;
+    return existingSession[0].id;
   },
 
   // Get all conversations for the current user
@@ -150,9 +150,9 @@ export const conversationService = {
       .from('itineraries')
       .select('id')
       .eq('conversation_id', conversationId)
-      .single();
+      .limit(1);
 
-    if (existing) {
+    if (existing && existing.length > 0) {
       // Update existing itinerary
       const { data, error } = await supabase
         .from('itineraries')
@@ -163,7 +163,7 @@ export const conversationService = {
           total_cost: totalCost,
           updated_at: new Date().toISOString()
         })
-        .eq('id', existing.id)
+        .eq('id', existing[0].id)
         .select()
         .single();
 
