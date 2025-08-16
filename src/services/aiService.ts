@@ -71,6 +71,15 @@ const extractItineraryFromResponse = (response: string): { content: string; itin
     if (jsonMatch) {
       const parsed = JSON.parse(jsonMatch[0]);
       if (parsed.itinerary) {
+        // Sanitize cost values to ensure they are numeric
+        parsed.itinerary = parsed.itinerary.map((day: any) => ({
+          ...day,
+          items: day.items?.map((item: any) => ({
+            ...item,
+            cost: typeof item.cost === 'number' ? item.cost : 
+                  (typeof item.cost === 'string' ? parseFloat(item.cost) || 0 : 0)
+          })) || []
+        }));
         return parsed;
       }
     }
@@ -194,6 +203,18 @@ export const generateAIResponse = async ({ message, conversationHistory = [] }: 
         try {
           const cleanJson = itineraryText.replace(/```json\n?|\n?```/g, '').trim();
           const itineraryData = JSON.parse(cleanJson);
+          
+          // Sanitize cost values in the generated itinerary
+          if (itineraryData.itinerary) {
+            itineraryData.itinerary = itineraryData.itinerary.map((day: any) => ({
+              ...day,
+              items: day.items?.map((item: any) => ({
+                ...item,
+                cost: typeof item.cost === 'number' ? item.cost : 
+                      (typeof item.cost === 'string' ? parseFloat(item.cost) || 0 : 0)
+              })) || []
+            }));
+          }
           
           return {
             content: extractedData.content,
