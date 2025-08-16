@@ -50,6 +50,12 @@
     "helpful": "مفيد",
     "notHelpful": "غير مفيد",
     "exportPdf": "تصدير PDF",
+  },
+  "voice": {
+    "startRecording": "بدء التسجيل الصوتي",
+    "stopRecording": "إيقاف التسجيل الصوتي",
+    "listening": "جاري الاستماع...",
+    "notSupported": "التسجيل الصوتي غير مدعوم في هذا المتصفح"
     "types": {
       "culture": "ثقافة",
       "food": "طعام",

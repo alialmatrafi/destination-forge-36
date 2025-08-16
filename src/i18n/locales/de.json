@@ -50,6 +50,12 @@
     "helpful": "Hilfreich",
     "notHelpful": "Nicht hilfreich",
     "exportPdf": "PDF exportieren",
+  },
+  "voice": {
+    "startRecording": "Sprachaufnahme starten",
+    "stopRecording": "Sprachaufnahme stoppen",
+    "listening": "Hört zu...",
+    "notSupported": "Sprachaufnahme in diesem Browser nicht unterstützt"
     "types": {
       "culture": "Kultur",
       "food": "Essen",

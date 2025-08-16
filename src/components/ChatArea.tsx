@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Mic } from "lucide-react";
+import { Send } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { MessageBubble } from "./MessageBubble";
+import { VoiceRecordingButton } from "./VoiceRecordingButton";
 
 interface Message {
   id: string;
@@ -59,6 +60,15 @@ export const ChatArea = ({ messages, onSendMessage, isWelcomeMode, onMenuClick }
     textarea.style.height = `${Math.min(textarea.scrollHeight, 200)}px`;
   };
 
+  const handleVoiceTranscript = (transcript: string) => {
+    setInput(transcript);
+    // Auto-resize textarea
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 200)}px`;
+    }
+  };
+
   return (
     <div className="flex flex-col h-full">
       {/* Messages */}
@@ -85,13 +95,12 @@ export const ChatArea = ({ messages, onSendMessage, isWelcomeMode, onMenuClick }
                 className="min-h-[44px] sm:min-h-[48px] max-h-[150px] sm:max-h-[200px] resize-none pr-12 bg-card border-input focus:ring-travel-blue text-sm sm:text-base"
                 rows={1}
               />
-              <Button
-                variant="ghost"
-                size="sm"
-                className="absolute right-2 top-2 p-2 hover:bg-accent"
-              >
-                <Mic className="w-4 h-4 text-muted-foreground" />
-              </Button>
+              <div className="absolute right-2 top-2">
+                <VoiceRecordingButton 
+                  onTranscript={handleVoiceTranscript}
+                  disabled={false}
+                />
+              </div>
             </div>
             <Button
               onClick={handleSend}

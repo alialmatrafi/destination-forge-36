@@ -50,6 +50,12 @@
     "helpful": "Útil",
     "notHelpful": "No útil",
     "exportPdf": "Exportar PDF",
+  },
+  "voice": {
+    "startRecording": "Iniciar grabación de voz",
+    "stopRecording": "Detener grabación de voz",
+    "listening": "Escuchando...",
+    "notSupported": "Grabación de voz no compatible con este navegador"
     "types": {
       "culture": "cultura",
       "food": "comida",

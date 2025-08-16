@@ -50,6 +50,12 @@
     "helpful": "Helpful",
     "notHelpful": "Not helpful",
     "exportPdf": "Export PDF",
+  },
+  "voice": {
+    "startRecording": "Start voice recording",
+    "stopRecording": "Stop voice recording",
+    "listening": "Listening...",
+    "notSupported": "Voice recording not supported in this browser"
     "types": {
       "culture": "culture",
       "food": "food",
