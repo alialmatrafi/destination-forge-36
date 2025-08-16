@@ -14,6 +14,90 @@ const genAI = apiKey ? new GoogleGenerativeAI(apiKey) : null;
 const SYSTEM_PROMPT = systemPrompt;
 
 // Function to extract structured data from AI response
+const extractTravelInfo = (message: string): { destination?: string; days?: number; interests?: string[] } => {
+  const text = message.toLowerCase();
+  
+  // Extract destination
+  let destination = '';
+  const destinations = [
+    'باريس', 'paris', 'دبي', 'dubai', 'لندن', 'london', 'القاهرة', 'cairo',
+    'الرياض', 'riyadh', 'اسطنبول', 'istanbul', 'روما', 'rome', 'نيويورك', 'new york',
+    'طوكيو', 'tokyo', 'برشلونة', 'barcelona', 'مدريد', 'madrid', 'أمستردام', 'amsterdam',
+    'فيينا', 'vienna', 'براغ', 'prague', 'بودابست', 'budapest', 'وارسو', 'warsaw',
+    'كوالالمبور', 'kuala lumpur', 'سنغافورة', 'singapore', 'بانكوك', 'bangkok',
+    'هونج كونج', 'hong kong', 'سيول', 'seoul', 'أوساكا', 'osaka', 'كيوتو', 'kyoto',
+    'بالي', 'bali', 'جاكرتا', 'jakarta', 'مانيلا', 'manila', 'هو تشي منه', 'ho chi minh',
+    'مومباي', 'mumbai', 'دلهي', 'delhi', 'بنغالور', 'bangalore', 'كولكاتا', 'kolkata',
+    'كراتشي', 'karachi', 'لاهور', 'lahore', 'إسلام آباد', 'islamabad',
+    'الكويت', 'kuwait', 'الدوحة', 'doha', 'أبو ظبي', 'abu dhabi', 'الشارقة', 'sharjah',
+    'مسقط', 'muscat', 'المنامة', 'manama', 'صنعاء', 'sanaa', 'عمان', 'amman',
+    'بيروت', 'beirut', 'دمشق', 'damascus', 'بغداد', 'baghdad', 'البصرة', 'basra',
+    'الإسكندرية', 'alexandria', 'أسوان', 'aswan', 'الأقصر', 'luxor', 'شرم الشيخ', 'sharm el sheikh',
+    'الغردقة', 'hurghada', 'مراكش', 'marrakech', 'الدار البيضاء', 'casablanca',
+    'فاس', 'fez', 'الرباط', 'rabat', 'تونس', 'tunis', 'الجزائر', 'algiers',
+    'طرابلس', 'tripoli', 'بنغازي', 'benghazi', 'الخرطوم', 'khartoum',
+    'أديس أبابا', 'addis ababa', 'نيروبي', 'nairobi', 'كيب تاون', 'cape town',
+    'جوهانسبرغ', 'johannesburg', 'القاهرة', 'cairo', 'الجيزة', 'giza',
+    'لوس أنجلوس', 'los angeles', 'سان فرانسيسكو', 'san francisco', 'شيكاغو', 'chicago',
+    'بوسطن', 'boston', 'واشنطن', 'washington', 'ميامي', 'miami', 'لاس فيغاس', 'las vegas',
+    'تورونتو', 'toronto', 'فانكوفر', 'vancouver', 'مونتريال', 'montreal',
+    'ساو باولو', 'sao paulo', 'ريو دي جانيرو', 'rio de janeiro', 'بوينس آيرس', 'buenos aires',
+    'ليما', 'lima', 'بوغوتا', 'bogota', 'كاراكاس', 'caracas', 'كيتو', 'quito',
+    'سانتياغو', 'santiago', 'مونتيفيديو', 'montevideo', 'أسونسيون', 'asuncion',
+    'سيدني', 'sydney', 'ملبورن', 'melbourne', 'بريسبان', 'brisbane', 'بيرث', 'perth',
+    'أوكلاند', 'auckland', 'ويلينغتون', 'wellington', 'كرايستشيرش', 'christchurch',
+    'موسكو', 'moscow', 'سانت بطرسبرغ', 'saint petersburg', 'كييف', 'kiev',
+    'مينسك', 'minsk', 'فيلنيوس', 'vilnius', 'ريغا', 'riga', 'تالين', 'tallinn',
+    'هلسنكي', 'helsinki', 'ستوكهولم', 'stockholm', 'أوسلو', 'oslo', 'كوبنهاغن', 'copenhagen',
+    'ريكيافيك', 'reykjavik', 'دبلن', 'dublin', 'إدنبرة', 'edinburgh', 'كارديف', 'cardiff',
+    'بلفاست', 'belfast', 'مانشستر', 'manchester', 'ليفربول', 'liverpool', 'برمنغهام', 'birmingham',
+    'ليدز', 'leeds', 'شيفيلد', 'sheffield', 'بريستول', 'bristol', 'نيوكاسل', 'newcastle',
+    'غلاسكو', 'glasgow', 'أبردين', 'aberdeen', 'إنفرنيس', 'inverness'
+  ];
+  
+  for (const dest of destinations) {
+    if (text.includes(dest)) {
+      destination = dest;
+      break;
+    }
+  }
+  
+  // Extract number of days
+  let days = 0;
+  const dayPatterns = [
+    /(\d+)\s*(?:يوم|أيام|day|days)/gi,
+    /(?:لمدة|for)\s*(\d+)/gi,
+    /(\d+)\s*(?:ليلة|ليال|night|nights)/gi
+  ];
+  
+  for (const pattern of dayPatterns) {
+    const match = text.match(pattern);
+    if (match) {
+      days = parseInt(match[1]) || 0;
+      break;
+    }
+  }
+  
+  // Extract interests
+  const interests = [];
+  const interestKeywords = {
+    'ثقافة': ['ثقافة', 'متاحف', 'تاريخ', 'آثار', 'culture', 'museums', 'history'],
+    'طعام': ['طعام', 'مطاعم', 'أكل', 'food', 'restaurants', 'cuisine'],
+    'تسوق': ['تسوق', 'shopping', 'أسواق', 'markets'],
+    'طبيعة': ['طبيعة', 'حدائق', 'nature', 'parks', 'outdoor'],
+    'مغامرة': ['مغامرة', 'adventure', 'رياضة', 'sports'],
+    'استرخاء': ['استرخاء', 'relaxation', 'spa', 'beach', 'شاطئ']
+  };
+  
+  for (const [interest, keywords] of Object.entries(interestKeywords)) {
+    if (keywords.some(keyword => text.includes(keyword))) {
+      interests.push(interest);
+    }
+  }
+  
+  return { destination, days: days || 3, interests };
+};
+
 const extractItineraryFromResponse = (response: string): { content: string; itinerary?: any[]; city?: string; country?: string } => {
   try {
     // Try to find JSON in the response - improved regex
@@ -81,12 +165,13 @@ const extractItineraryFromResponse = (response: string): { content: string; itin
   }
 
   // If no structured data found, try to extract city/country from text
-  const cityCountryMatch = cleanContent.match(/(.*?)\s*[،,]\s*(.*?)(?:\s|$)/);
+  // Enhanced city/country extraction
   let city = '';
   let country = '';
-
-  // Common city patterns
-  const cityPatterns = {
+  
+  // Comprehensive city-country mapping
+  const cityCountryMap: { [key: string]: { city: string; country: string } } = {
+    // Arabic cities
     'باريس': { city: 'Paris', country: 'France' },
     'دبي': { city: 'Dubai', country: 'UAE' },
     'لندن': { city: 'London', country: 'UK' },
@@ -97,6 +182,49 @@ const extractItineraryFromResponse = (response: string): { content: string; itin
     'نيويورك': { city: 'New York', country: 'USA' },
     'طوكيو': { city: 'Tokyo', country: 'Japan' },
     'برشلونة': { city: 'Barcelona', country: 'Spain' },
+    'مدريد': { city: 'Madrid', country: 'Spain' },
+    'أمستردام': { city: 'Amsterdam', country: 'Netherlands' },
+    'فيينا': { city: 'Vienna', country: 'Austria' },
+    'براغ': { city: 'Prague', country: 'Czech Republic' },
+    'بودابست': { city: 'Budapest', country: 'Hungary' },
+    'كوالالمبور': { city: 'Kuala Lumpur', country: 'Malaysia' },
+    'سنغافورة': { city: 'Singapore', country: 'Singapore' },
+    'بانكوك': { city: 'Bangkok', country: 'Thailand' },
+    'هونج كونج': { city: 'Hong Kong', country: 'Hong Kong' },
+    'سيول': { city: 'Seoul', country: 'South Korea' },
+    'أوساكا': { city: 'Osaka', country: 'Japan' },
+    'كيوتو': { city: 'Kyoto', country: 'Japan' },
+    'بالي': { city: 'Bali', country: 'Indonesia' },
+    'جاكرتا': { city: 'Jakarta', country: 'Indonesia' },
+    'مانيلا': { city: 'Manila', country: 'Philippines' },
+    'مومباي': { city: 'Mumbai', country: 'India' },
+    'دلهي': { city: 'Delhi', country: 'India' },
+    'الكويت': { city: 'Kuwait City', country: 'Kuwait' },
+    'الدوحة': { city: 'Doha', country: 'Qatar' },
+    'أبو ظبي': { city: 'Abu Dhabi', country: 'UAE' },
+    'مسقط': { city: 'Muscat', country: 'Oman' },
+    'المنامة': { city: 'Manama', country: 'Bahrain' },
+    'عمان': { city: 'Amman', country: 'Jordan' },
+    'بيروت': { city: 'Beirut', country: 'Lebanon' },
+    'دمشق': { city: 'Damascus', country: 'Syria' },
+    'بغداد': { city: 'Baghdad', country: 'Iraq' },
+    'الإسكندرية': { city: 'Alexandria', country: 'Egypt' },
+    'أسوان': { city: 'Aswan', country: 'Egypt' },
+    'الأقصر': { city: 'Luxor', country: 'Egypt' },
+    'شرم الشيخ': { city: 'Sharm El Sheikh', country: 'Egypt' },
+    'الغردقة': { city: 'Hurghada', country: 'Egypt' },
+    'مراكش': { city: 'Marrakech', country: 'Morocco' },
+    'الدار البيضاء': { city: 'Casablanca', country: 'Morocco' },
+    'فاس': { city: 'Fez', country: 'Morocco' },
+    'الرباط': { city: 'Rabat', country: 'Morocco' },
+    'تونس': { city: 'Tunis', country: 'Tunisia' },
+    'الجزائر': { city: 'Algiers', country: 'Algeria' },
+    'طرابلس': { city: 'Tripoli', country: 'Libya' },
+    'الخرطوم': { city: 'Khartoum', country: 'Sudan' },
+    'موسكو': { city: 'Moscow', country: 'Russia' },
+    'سانت بطرسبرغ': { city: 'Saint Petersburg', country: 'Russia' },
+    
+    // English cities
     'paris': { city: 'Paris', country: 'France' },
     'dubai': { city: 'Dubai', country: 'UAE' },
     'london': { city: 'London', country: 'UK' },
@@ -106,11 +234,54 @@ const extractItineraryFromResponse = (response: string): { content: string; itin
     'rome': { city: 'Rome', country: 'Italy' },
     'new york': { city: 'New York', country: 'USA' },
     'tokyo': { city: 'Tokyo', country: 'Japan' },
-    'barcelona': { city: 'Barcelona', country: 'Spain' }
+    'barcelona': { city: 'Barcelona', country: 'Spain' },
+    'madrid': { city: 'Madrid', country: 'Spain' },
+    'amsterdam': { city: 'Amsterdam', country: 'Netherlands' },
+    'vienna': { city: 'Vienna', country: 'Austria' },
+    'prague': { city: 'Prague', country: 'Czech Republic' },
+    'budapest': { city: 'Budapest', country: 'Hungary' },
+    'kuala lumpur': { city: 'Kuala Lumpur', country: 'Malaysia' },
+    'singapore': { city: 'Singapore', country: 'Singapore' },
+    'bangkok': { city: 'Bangkok', country: 'Thailand' },
+    'hong kong': { city: 'Hong Kong', country: 'Hong Kong' },
+    'seoul': { city: 'Seoul', country: 'South Korea' },
+    'osaka': { city: 'Osaka', country: 'Japan' },
+    'kyoto': { city: 'Kyoto', country: 'Japan' },
+    'bali': { city: 'Bali', country: 'Indonesia' },
+    'jakarta': { city: 'Jakarta', country: 'Indonesia' },
+    'manila': { city: 'Manila', country: 'Philippines' },
+    'mumbai': { city: 'Mumbai', country: 'India' },
+    'delhi': { city: 'Delhi', country: 'India' },
+    'kuwait': { city: 'Kuwait City', country: 'Kuwait' },
+    'doha': { city: 'Doha', country: 'Qatar' },
+    'abu dhabi': { city: 'Abu Dhabi', country: 'UAE' },
+    'muscat': { city: 'Muscat', country: 'Oman' },
+    'manama': { city: 'Manama', country: 'Bahrain' },
+    'amman': { city: 'Amman', country: 'Jordan' },
+    'beirut': { city: 'Beirut', country: 'Lebanon' },
+    'damascus': { city: 'Damascus', country: 'Syria' },
+    'baghdad': { city: 'Baghdad', country: 'Iraq' },
+    'alexandria': { city: 'Alexandria', country: 'Egypt' },
+    'aswan': { city: 'Aswan', country: 'Egypt' },
+    'luxor': { city: 'Luxor', country: 'Egypt' },
+    'sharm el sheikh': { city: 'Sharm El Sheikh', country: 'Egypt' },
+    'hurghada': { city: 'Hurghada', country: 'Egypt' },
+    'marrakech': { city: 'Marrakech', country: 'Morocco' },
+    'casablanca': { city: 'Casablanca', country: 'Morocco' },
+    'fez': { city: 'Fez', country: 'Morocco' },
+    'rabat': { city: 'Rabat', country: 'Morocco' },
+    'tunis': { city: 'Tunis', country: 'Tunisia' },
+    'algiers': { city: 'Algiers', country: 'Algeria' },
+    'tripoli': { city: 'Tripoli', country: 'Libya' },
+    'khartoum': { city: 'Khartoum', country: 'Sudan' },
+    'moscow': { city: 'Moscow', country: 'Russia' },
+    'saint petersburg': { city: 'Saint Petersburg', country: 'Russia' }
   };
 
-  for (const [pattern, info] of Object.entries(cityPatterns)) {
-    if (cleanContent.toLowerCase().includes(pattern)) {
+  // Find city in content
+  const contentLower = cleanContent.toLowerCase();
+  for (const [pattern, info] of Object.entries(cityCountryMap)) {
+    if (contentLower.includes(pattern.toLowerCase())) {
       city = info.city;
       country = info.country;
       break;
@@ -151,27 +322,37 @@ export const generateAIResponse = async ({ message, conversationHistory = [] }: 
 
     if (isTravelRequest) {
       // For travel requests, generate structured itinerary
+      const travelInfo = extractTravelInfo(message);
+      const destination = travelInfo.destination || 'الوجهة المطلوبة';
+      const days = travelInfo.days || 3;
+      const interests = travelInfo.interests.length > 0 ? travelInfo.interests.join('، ') : 'الثقافة والطعام';
+      
       const itineraryPrompt = `${systemPrompt}${conversationContext}
 
 طلب المستخدم: ${message}
 
+معلومات مستخرجة:
+- الوجهة: ${destination}
+- عدد الأيام: ${days}
+- الاهتمامات: ${interests}
+
 قم بإنشاء رد يتضمن:
-1. نص وصفي مفيد باللغة العربية
-2. جدول رحلة مفصل بتنسيق JSON
+1. نص وصفي مفيد باللغة العربية عن الوجهة والرحلة
+2. جدول رحلة مفصل لـ ${days} أيام في ${destination} بتنسيق JSON
 
 تنسيق الرد المطلوب:
 
-[نص وصفي للرحلة باللغة العربية]
+[نص وصفي للرحلة إلى ${destination} لمدة ${days} أيام باللغة العربية]
 
 \`\`\`json
 {
-  "content": "وصف مختصر للرحلة",
-  "city": "اسم المدينة بالإنجليزية",
+  "content": "وصف مختصر للرحلة إلى ${destination}",
+  "city": "${destination}",
   "country": "اسم البلد بالإنجليزية",
   "itinerary": [
     {
       "day": 1,
-      "date": "التاريخ أو اليوم الأول",
+      "date": "اليوم الأول",
       "theme": "موضوع اليوم",
       "items": [
         {
@@ -183,10 +364,13 @@ export const generateAIResponse = async ({ message, conversationHistory = [] }: 
         }
       ]
     }
+    ${days > 1 ? `... (كرر لـ ${days} أيام)` : ''}
   ]
 }
 \`\`\`
 
+يجب أن يحتوي الجدول على ${days} أيام بالضبط.
+ركز على الاهتمامات: ${interests}
 أنواع الأنشطة المتاحة: "culture", "food", "transport", "shopping"
 تأكد من أن التكاليف أرقام صحيحة.`;
 
