@@ -1,0 +1,69 @@
+{
+  "app": {
+    "title": "TravelAI - 您的智能旅行助手",
+    "description": "借助AI协助规划完美旅行。获得个性化行程、预算规划和旅行建议。"
+  },
+  "sidebar": {
+    "title": "TravelAI",
+    "searchPlaceholder": "搜索对话...",
+    "noConversations": "暂无对话",
+    "startFirst": "开始您的第一次对话",
+    "guestUser": "访客用户",
+    "signInToSave": "登录以保存行程"
+  },
+  "chat": {
+    "welcomeTitle": "用AI规划您的完美旅行",
+    "welcomeDescription": "获得个性化旅行行程、建议和专家意见",
+    "inputPlaceholder": "询问我关于您旅行计划的任何问题...",
+    "inputPlaceholderChat": "输入您的消息...",
+    "disclaimer": "TravelAI可能产生不准确的信息。预订前请验证详细信息。",
+    "sendMessage": "发送消息"
+  },
+  "suggestions": {
+    "paris": {
+      "title": "巴黎周末游",
+      "description": "规划3天巴黎预算之旅",
+      "prompt": "我想规划一个3天的巴黎周末旅行。我对文化、博物馆和美食感兴趣。我的预算大约是1500美元，不包括机票。"
+    },
+    "family": {
+      "title": "家庭海滩度假",
+      "description": "为4口之家规划7天海滩旅行",
+      "prompt": "我想为4人家庭规划7天海滩度假（2个成人，2个8岁和12岁的孩子）。我们寻找适合家庭的活动和住宿。"
+    },
+    "adventure": {
+      "title": "新西兰探险",
+      "description": "规划10天徒步探险旅行",
+      "prompt": "我正在规划一个10天的新西兰探险旅行。我喜欢徒步、户外活动和风景观光。预算大约3000美元。"
+    },
+    "food": {
+      "title": "意大利美食之旅",
+      "description": "规划穿越意大利的烹饪之旅",
+      "prompt": "我想规划一个为期2周的意大利烹饪之旅。我对正宗的当地美食和烹饪课程充满热情。"
+    }
+  },
+  "itinerary": {
+    "title": "行程 - 东京3天",
+    "subtitle": "文化体验、美食和购物",
+    "transport": "交通",
+    "day": "第",
+    "free": "免费",
+    "helpful": "有帮助",
+    "notHelpful": "没帮助",
+    "exportPdf": "导出PDF",
+    "types": {
+      "culture": "文化",
+      "food": "美食",
+      "transport": "交通",
+      "shopping": "购物"
+    }
+  },
+  "languages": {
+    "en": "English",
+    "ar": "العربية",
+    "es": "Español",
+    "fr": "Français",
+    "de": "Deutsch",
+    "zh": "中文",
+    "ja": "日本語"
+  }
+}

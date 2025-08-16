@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Sidebar } from "./Sidebar";
 import { ChatArea } from "./ChatArea";
 import { TripSuggestions } from "./TripSuggestions";
@@ -23,6 +24,7 @@ export const TravelAssistant = () => {
     { id: "3", title: "Bali Retreat", date: "2 weeks ago" },
   ]);
 
+  const { t } = useTranslation();
   const [activeConversation, setActiveConversation] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [showWelcome, setShowWelcome] = useState(true);
@@ -71,10 +73,10 @@ export const TravelAssistant = () => {
             <div className="flex-1 flex items-center justify-center">
               <div className="text-center max-w-2xl mx-auto px-6">
                 <h1 className="text-3xl font-bold text-foreground mb-4">
-                  Plan Your Perfect Trip with AI
+                  {t('chat.welcomeTitle')}
                 </h1>
                 <p className="text-muted-foreground text-lg mb-8">
-                  Get personalized travel itineraries, recommendations, and expert advice
+                  {t('chat.welcomeDescription')}
                 </p>
                 <TripSuggestions onSelectSuggestion={handleSendMessage} />
               </div>

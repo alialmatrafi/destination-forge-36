@@ -1,0 +1,69 @@
+{
+  "app": {
+    "title": "TravelAI - Votre Assistant de Voyage Intelligent",
+    "description": "Planifiez des voyages parfaits avec l'assistance IA. Obtenez des itinéraires personnalisés, planification budgétaire et recommandations de voyage."
+  },
+  "sidebar": {
+    "title": "TravelAI",
+    "searchPlaceholder": "Rechercher des conversations...",
+    "noConversations": "Aucune conversation pour le moment",
+    "startFirst": "Commencez votre première conversation",
+    "guestUser": "Utilisateur Invité",
+    "signInToSave": "Connectez-vous pour sauvegarder les voyages"
+  },
+  "chat": {
+    "welcomeTitle": "Planifiez Votre Voyage Parfait avec l'IA",
+    "welcomeDescription": "Obtenez des itinéraires de voyage personnalisés, des recommandations et des conseils d'experts",
+    "inputPlaceholder": "Demandez-moi n'importe quoi sur vos projets de voyage...",
+    "inputPlaceholderChat": "Tapez votre message...",
+    "disclaimer": "TravelAI peut produire des informations inexactes. Vérifiez les détails avant de réserver.",
+    "sendMessage": "Envoyer le message"
+  },
+  "suggestions": {
+    "paris": {
+      "title": "Week-end à Paris",
+      "description": "Planifiez un voyage de 3 jours à Paris avec un budget",
+      "prompt": "J'aimerais planifier un voyage de week-end de 3 jours à Paris. Je m'intéresse à la culture, aux musées et à la bonne cuisine. Mon budget est d'environ 1500$ hors vols."
+    },
+    "family": {
+      "title": "Vacances Familiales à la Plage",
+      "description": "Planifiez un voyage de plage de 7 jours pour une famille de 4",
+      "prompt": "Je veux planifier des vacances familiales à la plage de 7 jours pour 4 personnes (2 adultes, 2 enfants de 8 et 12 ans). Nous cherchons des activités et hébergements familiaux."
+    },
+    "adventure": {
+      "title": "Aventure en Nouvelle-Zélande",
+      "description": "Planifiez un voyage d'aventure de 10 jours avec randonnée",
+      "prompt": "Je planifie un voyage d'aventure de 10 jours en Nouvelle-Zélande. J'adore la randonnée, les activités de plein air et les vues panoramiques. Budget d'environ 3000$."
+    },
+    "food": {
+      "title": "Tour Gastronomique en Italie",
+      "description": "Planifiez un voyage culinaire à travers l'Italie",
+      "prompt": "Je veux planifier un voyage culinaire à travers l'Italie pendant 2 semaines. Je suis passionné de cuisine locale authentique et de cours de cuisine."
+    }
+  },
+  "itinerary": {
+    "title": "Itinéraire - Tokyo 3 Jours",
+    "subtitle": "Expériences culturelles, nourriture et shopping",
+    "transport": "transport",
+    "day": "Jour",
+    "free": "Gratuit",
+    "helpful": "Utile",
+    "notHelpful": "Pas utile",
+    "exportPdf": "Exporter PDF",
+    "types": {
+      "culture": "culture",
+      "food": "nourriture",
+      "transport": "transport",
+      "shopping": "shopping"
+    }
+  },
+  "languages": {
+    "en": "English",
+    "ar": "العربية",
+    "es": "Español",
+    "fr": "Français",
+    "de": "Deutsch",
+    "zh": "中文",
+    "ja": "日本語"
+  }
+}

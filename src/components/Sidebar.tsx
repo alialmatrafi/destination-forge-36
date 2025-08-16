@@ -1,7 +1,9 @@
 import { Plus, Search, MessageSquare } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { LanguageSelector } from "./LanguageSelector";
 
 interface Conversation {
   id: string;
@@ -22,6 +24,8 @@ export const Sidebar = ({
   onConversationSelect,
   onNewConversation,
 }: SidebarProps) => {
+  const { t } = useTranslation();
+
   return (
     <div className="w-64 bg-sidebar border-r border-sidebar-border flex flex-col h-full">
       {/* Header */}
@@ -31,23 +35,26 @@ export const Sidebar = ({
             <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
               <MessageSquare className="w-4 h-4 text-white" />
             </div>
-            <h1 className="font-semibold text-foreground">TravelAI</h1>
+            <h1 className="font-semibold text-foreground">{t('sidebar.title')}</h1>
           </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onNewConversation}
-            className="p-2 hover:bg-accent"
-          >
-            <Plus className="w-4 h-4" />
-          </Button>
+          <div className="flex gap-1">
+            <LanguageSelector />
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onNewConversation}
+              className="p-2 hover:bg-accent"
+            >
+              <Plus className="w-4 h-4" />
+            </Button>
+          </div>
         </div>
         
         {/* Search */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
-            placeholder="Search conversations..."
+            placeholder={t('sidebar.searchPlaceholder')}
             className="pl-9 bg-background border-input"
           />
         </div>
@@ -80,8 +87,8 @@ export const Sidebar = ({
           {conversations.length === 0 && (
             <div className="text-center text-muted-foreground text-sm mt-8">
               <MessageSquare className="w-8 h-8 mx-auto mb-2 opacity-50" />
-              <p>No conversations yet</p>
-              <p className="text-xs mt-1">Start your first conversation</p>
+              <p>{t('sidebar.noConversations')}</p>
+              <p className="text-xs mt-1">{t('sidebar.startFirst')}</p>
             </div>
           )}
         </div>
@@ -94,8 +101,8 @@ export const Sidebar = ({
             <span className="text-white text-sm font-medium">G</span>
           </div>
           <div className="flex-1 min-w-0">
-            <div className="text-sm font-medium text-foreground">Guest User</div>
-            <div className="text-xs text-muted-foreground">Sign in to save trips</div>
+            <div className="text-sm font-medium text-foreground">{t('sidebar.guestUser')}</div>
+            <div className="text-xs text-muted-foreground">{t('sidebar.signInToSave')}</div>
           </div>
         </div>
       </div>

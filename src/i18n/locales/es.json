@@ -1,0 +1,69 @@
+{
+  "app": {
+    "title": "TravelAI - Tu Asistente Inteligente de Viajes",
+    "description": "Planifica viajes perfectos con asistencia de IA. Obtén itinerarios personalizados, planificación de presupuesto y recomendaciones de viaje."
+  },
+  "sidebar": {
+    "title": "TravelAI",
+    "searchPlaceholder": "Buscar conversaciones...",
+    "noConversations": "Aún no hay conversaciones",
+    "startFirst": "Inicia tu primera conversación",
+    "guestUser": "Usuario Invitado",
+    "signInToSave": "Inicia sesión para guardar viajes"
+  },
+  "chat": {
+    "welcomeTitle": "Planifica tu Viaje Perfecto con IA",
+    "welcomeDescription": "Obtén itinerarios de viaje personalizados, recomendaciones y consejos de expertos",
+    "inputPlaceholder": "Pregúntame cualquier cosa sobre tus planes de viaje...",
+    "inputPlaceholderChat": "Escribe tu mensaje...",
+    "disclaimer": "TravelAI puede producir información inexacta. Verifica los detalles antes de reservar.",
+    "sendMessage": "Enviar mensaje"
+  },
+  "suggestions": {
+    "paris": {
+      "title": "Fin de Semana en París",
+      "description": "Planifica un viaje de 3 días a París con presupuesto",
+      "prompt": "Me gustaría planificar un viaje de fin de semana de 3 días a París. Me interesa la cultura, museos y buena comida. Mi presupuesto es alrededor de $1500 excluyendo vuelos."
+    },
+    "family": {
+      "title": "Vacaciones Familiares en la Playa",
+      "description": "Planifica un viaje de playa de 7 días para una familia de 4",
+      "prompt": "Quiero planificar unas vacaciones familiares en la playa de 7 días para 4 personas (2 adultos, 2 niños de 8 y 12 años). Buscamos actividades y alojamiento familiar."
+    },
+    "adventure": {
+      "title": "Aventura en Nueva Zelanda",
+      "description": "Planifica un viaje de aventura de 10 días con senderismo",
+      "prompt": "Estoy planeando un viaje de aventura de 10 días a Nueva Zelanda. Me encanta el senderismo, actividades al aire libre y vistas panorámicas. El presupuesto es alrededor de $3000."
+    },
+    "food": {
+      "title": "Tour Gastronómico en Italia",
+      "description": "Planifica un viaje culinario por Italia",
+      "prompt": "Quiero planificar un viaje culinario por Italia durante 2 semanas. Soy apasionado de la cocina local auténtica y las clases de cocina."
+    }
+  },
+  "itinerary": {
+    "title": "Itinerario - Tokio 3 Días",
+    "subtitle": "Experiencias culturales, comida y compras",
+    "transport": "transporte",
+    "day": "Día",
+    "free": "Gratis",
+    "helpful": "Útil",
+    "notHelpful": "No útil",
+    "exportPdf": "Exportar PDF",
+    "types": {
+      "culture": "cultura",
+      "food": "comida",
+      "transport": "transporte",
+      "shopping": "compras"
+    }
+  },
+  "languages": {
+    "en": "English",
+    "ar": "العربية",
+    "es": "Español",
+    "fr": "Français",
+    "de": "Deutsch",
+    "zh": "中文",
+    "ja": "日本語"
+  }
+}

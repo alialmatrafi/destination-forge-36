@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Clock, MapPin, DollarSign, ThumbsUp, ThumbsDown, FileText } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -21,6 +22,7 @@ interface DayItinerary {
 
 export const ItineraryTable = () => {
   const [feedback, setFeedback] = useState<"up" | "down" | null>(null);
+  const { t } = useTranslation();
 
   const itinerary: DayItinerary[] = [
     {
@@ -101,10 +103,10 @@ export const ItineraryTable = () => {
         <div className="flex items-center justify-between">
           <div>
             <CardTitle className="text-lg font-semibold text-foreground">
-              Itinerary - Tokyo 3 Days
+              {t('itinerary.title')}
             </CardTitle>
             <p className="text-sm text-muted-foreground mt-1">
-              Cultural experiences, food, and shopping
+              {t('itinerary.subtitle')}
             </p>
           </div>
           <div className="text-right">
@@ -112,7 +114,7 @@ export const ItineraryTable = () => {
               ${totalCost}
             </div>
             <div className="text-xs text-muted-foreground">
-              + $35 transport
+              + $35 {t('itinerary.transport')}
             </div>
           </div>
         </div>
@@ -124,7 +126,7 @@ export const ItineraryTable = () => {
             <div className="bg-accent/50 px-6 py-3 border-b border-border">
               <div className="flex items-center justify-between">
                 <h3 className="font-medium text-foreground">
-                  Day {day.day} - {day.theme}
+                  {t('itinerary.day')} {day.day} - {day.theme}
                 </h3>
                 <span className="text-sm text-muted-foreground">{day.date}</span>
               </div>
@@ -141,7 +143,7 @@ export const ItineraryTable = () => {
                           {item.time}
                         </span>
                         <Badge className={getTypeColor(item.type)}>
-                          {item.type}
+                          {t(`itinerary.types.${item.type}`)}
                         </Badge>
                       </div>
                       
@@ -157,7 +159,7 @@ export const ItineraryTable = () => {
                     
                     <div className="flex items-center gap-1 text-lg font-semibold text-travel-blue">
                       <DollarSign className="w-4 h-4" />
-                      {item.cost === 0 ? "Free" : item.cost}
+                      {item.cost === 0 ? t('itinerary.free') : item.cost}
                     </div>
                   </div>
                 </div>
@@ -178,7 +180,7 @@ export const ItineraryTable = () => {
               className="gap-1"
             >
               <ThumbsUp className="w-4 h-4" />
-              Helpful
+              {t('itinerary.helpful')}
             </Button>
             <Button
               variant={feedback === "down" ? "destructive" : "outline"}
@@ -187,7 +189,7 @@ export const ItineraryTable = () => {
               className="gap-1"
             >
               <ThumbsDown className="w-4 h-4" />
-              Not helpful
+              {t('itinerary.notHelpful')}
             </Button>
           </div>
           
@@ -197,7 +199,7 @@ export const ItineraryTable = () => {
             className="bg-travel-blue hover:bg-travel-blue-dark text-white gap-1"
           >
             <FileText className="w-4 h-4" />
-            Export PDF
+            {t('itinerary.exportPdf')}
           </Button>
         </div>
       </div>

@@ -1,0 +1,69 @@
+{
+  "app": {
+    "title": "TravelAI - あなたのインテリジェント旅行アシスタント",
+    "description": "AIアシスタンスで完璧な旅行を計画しましょう。パーソナライズされた旅程、予算計画、旅行の推奨事項を取得します。"
+  },
+  "sidebar": {
+    "title": "TravelAI",
+    "searchPlaceholder": "会話を検索...",
+    "noConversations": "まだ会話がありません",
+    "startFirst": "最初の会話を始める",
+    "guestUser": "ゲストユーザー",
+    "signInToSave": "旅行を保存するにはサインイン"
+  },
+  "chat": {
+    "welcomeTitle": "AIで完璧な旅行を計画しましょう",
+    "welcomeDescription": "パーソナライズされた旅行の旅程、推奨事項、専門家のアドバイスを取得",
+    "inputPlaceholder": "旅行計画について何でもお聞きください...",
+    "inputPlaceholderChat": "メッセージを入力...",
+    "disclaimer": "TravelAIは不正確な情報を生成する可能性があります。予約前に詳細を確認してください。",
+    "sendMessage": "メッセージを送信"
+  },
+  "suggestions": {
+    "paris": {
+      "title": "パリ週末旅行",
+      "description": "予算でパリ3日間旅行を計画",
+      "prompt": "パリへの3日間の週末旅行を計画したいと思います。文化、博物館、美味しい食事に興味があります。予算はフライトを除いて約1500ドルです。"
+    },
+    "family": {
+      "title": "家族ビーチバケーション",
+      "description": "4人家族の7日間ビーチ旅行を計画",
+      "prompt": "4人家族（大人2人、8歳と12歳の子供2人）の7日間家族ビーチバケーションを計画したいと思います。家族向けの活動と宿泊施設を探しています。"
+    },
+    "adventure": {
+      "title": "ニュージーランドアドベンチャー",
+      "description": "ハイキング付き10日間アドベンチャー旅行を計画",
+      "prompt": "ニュージーランドへの10日間のアドベンチャー旅行を計画しています。ハイキング、アウトドア活動、景色の良い景色が大好きです。予算は約3000ドルです。"
+    },
+    "food": {
+      "title": "イタリア料理ツアー",
+      "description": "イタリア全土の料理の旅を計画",
+      "prompt": "2週間のイタリア料理の旅を計画したいと思います。本格的な地元料理と料理教室に情熱を持っています。"
+    }
+  },
+  "itinerary": {
+    "title": "旅程 - 東京3日間",
+    "subtitle": "文化体験、食事、ショッピング",
+    "transport": "交通",
+    "day": "日目",
+    "free": "無料",
+    "helpful": "役に立つ",
+    "notHelpful": "役に立たない",
+    "exportPdf": "PDF出力",
+    "types": {
+      "culture": "文化",
+      "food": "食事",
+      "transport": "交通",
+      "shopping": "ショッピング"
+    }
+  },
+  "languages": {
+    "en": "English",
+    "ar": "العربية",
+    "es": "Español",
+    "fr": "Français",
+    "de": "Deutsch",
+    "zh": "中文",
+    "ja": "日本語"
+  }
+}

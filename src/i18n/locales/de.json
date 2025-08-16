@@ -1,0 +1,69 @@
+{
+  "app": {
+    "title": "TravelAI - Ihr Intelligenter Reiseassistent",
+    "description": "Planen Sie perfekte Reisen mit KI-Unterstützung. Erhalten Sie personalisierte Reisepläne, Budgetplanung und Reiseempfehlungen."
+  },
+  "sidebar": {
+    "title": "TravelAI",
+    "searchPlaceholder": "Unterhaltungen durchsuchen...",
+    "noConversations": "Noch keine Unterhaltungen",
+    "startFirst": "Starten Sie Ihre erste Unterhaltung",
+    "guestUser": "Gastbenutzer",
+    "signInToSave": "Anmelden, um Reisen zu speichern"
+  },
+  "chat": {
+    "welcomeTitle": "Planen Sie Ihre Perfekte Reise mit KI",
+    "welcomeDescription": "Erhalten Sie personalisierte Reisepläne, Empfehlungen und Expertenberatung",
+    "inputPlaceholder": "Fragen Sie mich alles über Ihre Reisepläne...",
+    "inputPlaceholderChat": "Geben Sie Ihre Nachricht ein...",
+    "disclaimer": "TravelAI kann ungenaue Informationen produzieren. Überprüfen Sie Details vor der Buchung.",
+    "sendMessage": "Nachricht senden"
+  },
+  "suggestions": {
+    "paris": {
+      "title": "Wochenende in Paris",
+      "description": "Planen Sie eine 3-tägige Reise nach Paris mit Budget",
+      "prompt": "Ich möchte eine 3-tägige Wochenendreise nach Paris planen. Ich interessiere mich für Kultur, Museen und gutes Essen. Mein Budget beträgt etwa 1500$ ohne Flüge."
+    },
+    "family": {
+      "title": "Familien-Strandurlaub",
+      "description": "Planen Sie eine 7-tägige Strandreise für eine 4-köpfige Familie",
+      "prompt": "Ich möchte einen 7-tägigen Familien-Strandurlaub für 4 Personen planen (2 Erwachsene, 2 Kinder im Alter von 8 und 12 Jahren). Wir suchen familienfreundliche Aktivitäten und Unterkünfte."
+    },
+    "adventure": {
+      "title": "Abenteuer in Neuseeland",
+      "description": "Planen Sie eine 10-tägige Abenteuerreise mit Wandern",
+      "prompt": "Ich plane eine 10-tägige Abenteuerreise nach Neuseeland. Ich liebe Wandern, Outdoor-Aktivitäten und malerische Aussichten. Budget etwa 3000$."
+    },
+    "food": {
+      "title": "Kulinarische Tour in Italien",
+      "description": "Planen Sie eine kulinarische Reise durch Italien",
+      "prompt": "Ich möchte eine kulinarische Reise durch Italien für 2 Wochen planen. Ich bin leidenschaftlich für authentische lokale Küche und Kochkurse."
+    }
+  },
+  "itinerary": {
+    "title": "Reiseplan - Tokio 3 Tage",
+    "subtitle": "Kulturelle Erfahrungen, Essen und Einkaufen",
+    "transport": "Transport",
+    "day": "Tag",
+    "free": "Kostenlos",
+    "helpful": "Hilfreich",
+    "notHelpful": "Nicht hilfreich",
+    "exportPdf": "PDF exportieren",
+    "types": {
+      "culture": "Kultur",
+      "food": "Essen",
+      "transport": "Transport",
+      "shopping": "Einkaufen"
+    }
+  },
+  "languages": {
+    "en": "English",
+    "ar": "العربية",
+    "es": "Español",
+    "fr": "Français",
+    "de": "Deutsch",
+    "zh": "中文",
+    "ja": "日本語"
+  }
+}

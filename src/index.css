@@ -2,6 +2,63 @@
 @tailwind components;
 @tailwind utilities;
 
+/* RTL Support */
+[dir="rtl"] {
+  direction: rtl;
+}
+
+[dir="rtl"] .flex {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .text-left {
+  text-align: right;
+}
+
+[dir="rtl"] .text-right {
+  text-align: left;
+}
+
+[dir="rtl"] .ml-auto {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+[dir="rtl"] .mr-auto {
+  margin-right: 0;
+  margin-left: auto;
+}
+
+[dir="rtl"] .pl-9 {
+  padding-left: 0;
+  padding-right: 2.25rem;
+}
+
+[dir="rtl"] .pr-12 {
+  padding-right: 0;
+  padding-left: 3rem;
+}
+
+[dir="rtl"] .border-r {
+  border-right: none;
+  border-left: 1px solid hsl(var(--border));
+}
+
+[dir="rtl"] .border-l {
+  border-left: none;
+  border-right: 1px solid hsl(var(--border));
+}
+
+[dir="rtl"] .absolute.right-2 {
+  right: auto;
+  left: 0.5rem;
+}
+
+[dir="rtl"] .absolute.left-3 {
+  left: auto;
+  right: 0.75rem;
+}
+
 /* Travel AI Assistant Design System */
 
 @layer base {

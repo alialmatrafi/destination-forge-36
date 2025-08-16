@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Send, Mic } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { MessageBubble } from "./MessageBubble";
@@ -19,6 +20,7 @@ interface ChatAreaProps {
 
 export const ChatArea = ({ messages, onSendMessage, isWelcomeMode }: ChatAreaProps) => {
   const [input, setInput] = useState("");
+  const { t } = useTranslation();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -78,7 +80,7 @@ export const ChatArea = ({ messages, onSendMessage, isWelcomeMode }: ChatAreaPro
                 value={input}
                 onChange={handleInputChange}
                 onKeyPress={handleKeyPress}
-                placeholder={isWelcomeMode ? "Ask me anything about your travel plans..." : "Type your message..."}
+                placeholder={isWelcomeMode ? t('chat.inputPlaceholder') : t('chat.inputPlaceholderChat')}
                 className="min-h-[48px] max-h-[200px] resize-none pr-12 bg-card border-input focus:ring-travel-blue"
                 rows={1}
               />
@@ -96,11 +98,11 @@ export const ChatArea = ({ messages, onSendMessage, isWelcomeMode }: ChatAreaPro
               className="bg-travel-blue hover:bg-travel-blue-dark text-white px-4 py-3 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
           <Send className="w-4 h-4" />
-          <span className="sr-only">Send message</span>
+          <span className="sr-only">{t('chat.sendMessage')}</span>
             </Button>
           </div>
           <div className="text-xs text-muted-foreground mt-2 text-center">
-            TravelAI may produce inaccurate information. Verify details before booking.
+            {t('chat.disclaimer')}
           </div>
         </div>
       </div>

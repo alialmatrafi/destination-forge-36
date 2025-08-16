@@ -1,4 +1,5 @@
 import { MapPin, Users, Mountain, Utensils } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Card, CardContent } from "@/components/ui/card";
 
 interface TripSuggestion {
@@ -14,34 +15,36 @@ interface TripSuggestionsProps {
 }
 
 export const TripSuggestions = ({ onSelectSuggestion }: TripSuggestionsProps) => {
+  const { t } = useTranslation();
+
   const suggestions: TripSuggestion[] = [
     {
       id: "paris",
-      title: "Weekend in Paris",
-      description: "Plan a 3-day trip to Paris on a budget",
+      title: t('suggestions.paris.title'),
+      description: t('suggestions.paris.description'),
       icon: <MapPin className="w-5 h-5 text-travel-blue" />,
-      prompt: "I'd like to plan a 3-day weekend trip to Paris. I'm interested in culture, museums, and good food. My budget is around $1500 excluding flights."
+      prompt: t('suggestions.paris.prompt')
     },
     {
       id: "family",
-      title: "Family Beach Vacation",
-      description: "Plan a 7-day beach trip for a family of 4",
+      title: t('suggestions.family.title'),
+      description: t('suggestions.family.description'),
       icon: <Users className="w-5 h-5 text-travel-teal" />,
-      prompt: "I want to plan a 7-day family beach vacation for 4 people (2 adults, 2 kids aged 8 and 12). We're looking for family-friendly activities and accommodations."
+      prompt: t('suggestions.family.prompt')
     },
     {
       id: "adventure",
-      title: "Adventure in New Zealand",
-      description: "Plan a 10-day adventure trip with hiking",
+      title: t('suggestions.adventure.title'),
+      description: t('suggestions.adventure.description'),
       icon: <Mountain className="w-5 h-5 text-travel-success" />,
-      prompt: "I'm planning a 10-day adventure trip to New Zealand. I love hiking, outdoor activities, and scenic views. Budget is around $3000."
+      prompt: t('suggestions.adventure.prompt')
     },
     {
       id: "food",
-      title: "Food Tour in Italy",
-      description: "Plan a culinary journey through Italy",
+      title: t('suggestions.food.title'),
+      description: t('suggestions.food.description'),
       icon: <Utensils className="w-5 h-5 text-travel-warning" />,
-      prompt: "I want to plan a culinary journey through Italy for 2 weeks. I'm passionate about authentic local cuisine and cooking classes."
+      prompt: t('suggestions.food.prompt')
     }
   ];
 
