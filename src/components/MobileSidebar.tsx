@@ -1,4 +1,3 @@
-import { X, Plus, Search, MessageSquare } from "lucide-react";
 import { X, Plus, Search, MessageSquare, Trash2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { User } from "@supabase/supabase-js";
