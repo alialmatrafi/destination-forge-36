@@ -1,7 +1,13 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
+// Check if API key is available
+const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+if (!apiKey) {
+  console.error('VITE_GEMINI_API_KEY is not set in environment variables');
+}
+
 // Initialize Gemini AI
-const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
+const genAI = apiKey ? new GoogleGenerativeAI(apiKey) : null;
 
 interface AIRequest {
   message: string;
@@ -118,6 +124,11 @@ const extractItineraryFromResponse = (response: string): { content: string; itin
 // Main AI service function
 export const generateAIResponse = async ({ message, conversationHistory = [] }: AIRequest): Promise<AIResponse> => {
   try {
+    // Check if Gemini is properly initialized
+    if (!genAI) {
+      throw new Error('Gemini AI is not properly configured. Please check your API key.');
+    }
+
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     // Build conversation context
