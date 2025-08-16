@@ -7,17 +7,20 @@ interface Message {
   type: "user" | "assistant";
   content: string;
   timestamp: Date;
+  itinerary?: any[];
+  city?: string;
 }
 
 interface MessageBubbleProps {
   message: Message;
+  onEditItinerary?: (itinerary: any[]) => void;
 }
 
-export const MessageBubble = ({ message }: MessageBubbleProps) => {
+export const MessageBubble = ({ message, onEditItinerary }: MessageBubbleProps) => {
   const isUser = message.type === "user";
   
-  // Check if the message contains an itinerary (simple check for demo)
-  const hasItinerary = message.content.includes("itinerary") && !isUser;
+  // Check if the message has itinerary data
+  const hasItinerary = message.itinerary && !isUser;
 
   return (
     <div className={`flex gap-2 sm:gap-3 ${isUser ? "justify-end" : "justify-start"}`}>
@@ -42,7 +45,11 @@ export const MessageBubble = ({ message }: MessageBubbleProps) => {
         
         {hasItinerary && (
           <div className="mt-3 sm:mt-4">
-            <ItineraryTable />
+            <ItineraryTable 
+              itinerary={message.itinerary} 
+              city={message.city}
+              onEdit={onEditItinerary}
+            />
           </div>
         )}
         

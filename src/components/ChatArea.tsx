@@ -81,7 +81,18 @@ export const ChatArea = ({ messages, onSendMessage, isWelcomeMode, onMenuClick }
       <div className="flex-1 overflow-y-auto p-4 sm:p-6">
         <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
           {messages.map((message) => (
-            <MessageBubble key={message.id} message={message} />
+            <MessageBubble 
+              key={message.id} 
+              message={message}
+              onEditItinerary={(itinerary) => {
+                // Update the message with edited itinerary
+                setMessages(prev => prev.map(msg => 
+                  msg.id === message.id 
+                    ? { ...msg, itinerary }
+                    : msg
+                ));
+              }}
+            />
           ))}
           <div ref={messagesEndRef} />
         </div>
