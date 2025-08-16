@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Chrome, Apple, Smartphone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 
@@ -75,12 +77,66 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
     }));
   };
 
+  const handleSocialLogin = async (provider: 'google' | 'apple' | 'samsung') => {
+    setLoading(true);
+    try {
+      // For now, show a message that social login is coming soon
+      toast.info(`تسجيل الدخول عبر ${provider === 'google' ? 'Google' : provider === 'apple' ? 'Apple' : 'Samsung'} قريباً`);
+    } catch (error) {
+      toast.error('خطأ في تسجيل الدخول');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>{t('auth.welcome')}</DialogTitle>
         </DialogHeader>
+
+        {/* Social Login Buttons */}
+        <div className="space-y-3">
+          <Button
+            variant="outline"
+            className="w-full flex items-center gap-3 h-11"
+            onClick={() => handleSocialLogin('google')}
+            disabled={loading}
+          >
+            <Chrome className="w-5 h-5 text-blue-500" />
+            <span>المتابعة مع Google</span>
+          </Button>
+          
+          <Button
+            variant="outline"
+            className="w-full flex items-center gap-3 h-11"
+            onClick={() => handleSocialLogin('apple')}
+            disabled={loading}
+          >
+            <Apple className="w-5 h-5 text-gray-800" />
+            <span>المتابعة مع Apple</span>
+          </Button>
+          
+          <Button
+            variant="outline"
+            className="w-full flex items-center gap-3 h-11"
+            onClick={() => handleSocialLogin('samsung')}
+            disabled={loading}
+          >
+            <Smartphone className="w-5 h-5 text-blue-600" />
+            <span>المتابعة مع Samsung</span>
+          </Button>
+        </div>
+
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <Separator className="w-full" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-background px-2 text-muted-foreground">أو</span>
+          </div>
+        </div>
 
         <Tabs defaultValue="signin" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
