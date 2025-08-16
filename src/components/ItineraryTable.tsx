@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { Clock, MapPin, DollarSign, ThumbsUp, ThumbsDown, FileText } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
