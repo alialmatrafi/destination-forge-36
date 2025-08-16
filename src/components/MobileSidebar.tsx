@@ -1,4 +1,5 @@
 import { X, Plus, Search, MessageSquare } from "lucide-react";
+import { X, Plus, Search, MessageSquare, Trash2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { User } from "@supabase/supabase-js";
 import { useAuth } from "@/hooks/useAuth";
@@ -7,6 +8,17 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { LanguageSelector } from "./LanguageSelector";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { useState } from "react";
 
 interface Conversation {
   id: string;
@@ -23,6 +35,7 @@ interface MobileSidebarProps {
   onClose: () => void;
   user: User | null;
   onAuthClick: () => void;
+  onDeleteConversation?: (id: string) => void;
 }
 
 export const MobileSidebar = ({
@@ -34,9 +47,12 @@ export const MobileSidebar = ({
   onClose,
   user,
   onAuthClick,
+  onDeleteConversation,
 }: MobileSidebarProps) => {
   const { t } = useTranslation();
   const { signOut } = useAuth();
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [conversationToDelete, setConversationToDelete] = useState<string | null>(null);
 
   const handleConversationSelect = (id: string) => {
     onConversationSelect(id);
@@ -51,6 +67,20 @@ export const MobileSidebar = ({
   const handleSignOut = async () => {
     await signOut();
     onClose();
+  };
+
+  const handleDeleteClick = (conversationId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setConversationToDelete(conversationId);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (conversationToDelete && onDeleteConversation) {
+      onDeleteConversation(conversationToDelete);
+    }
+    setDeleteDialogOpen(false);
+    setConversationToDelete(null);
   };
 
   return (
@@ -115,16 +145,16 @@ export const MobileSidebar = ({
           <div className="flex-1 overflow-y-auto">
             <div className="p-2">
               {conversations.map((conversation) => (
-                <button
+                <div
                   key={conversation.id}
-                  onClick={() => handleConversationSelect(conversation.id)}
                   className={cn(
-                    "w-full text-left p-3 rounded-lg mb-1 transition-colors",
+                    "group relative w-full text-left p-3 rounded-lg mb-1 transition-colors cursor-pointer",
                     "hover:bg-accent",
                     activeConversation === conversation.id
                       ? "bg-accent text-accent-foreground"
                       : "text-foreground"
                   )}
+                  onClick={() => handleConversationSelect(conversation.id)}
                 >
                   <div className="font-medium text-sm truncate">
                     {conversation.title}
@@ -132,7 +162,17 @@ export const MobileSidebar = ({
                   <div className="text-xs text-muted-foreground mt-1">
                     {conversation.date}
                   </div>
-                </button>
+                  
+                  {/* Delete button - shows on hover */}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity p-1 h-6 w-6 hover:bg-destructive hover:text-destructive-foreground"
+                    onClick={(e) => handleDeleteClick(conversation.id, e)}
+                  >
+                    <Trash2 className="w-3 h-3" />
+                  </Button>
+                </div>
               ))}
               
               {conversations.length === 0 && (
@@ -190,6 +230,24 @@ export const MobileSidebar = ({
             )}
           </div>
         </div>
+
+        {/* Delete Confirmation Dialog */}
+        <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>حذف المحادثة</AlertDialogTitle>
+              <AlertDialogDescription>
+                هل أنت متأكد من حذف هذه المحادثة؟ لا يمكن التراجع عن هذا الإجراء.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>إلغاء</AlertDialogCancel>
+              <AlertDialogAction onClick={confirmDelete} className="bg-destructive hover:bg-destructive/90">
+                حذف
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </>
   );

@@ -72,6 +72,26 @@ export const TravelAssistant = () => {
     setSidebarOpen(false);
   };
 
+  const handleDeleteConversation = async (id: string) => {
+    try {
+      await conversationService.deleteConversation(id);
+      
+      // If the deleted conversation was active, reset to welcome screen
+      if (activeConversation === id) {
+        setActiveConversation(null);
+        setMessages([]);
+        setShowWelcome(true);
+      }
+      
+      // Refresh conversations list
+      await loadConversations();
+      toast.success('تم حذف المحادثة بنجاح');
+    } catch (error) {
+      console.error('Error deleting conversation:', error);
+      toast.error('خطأ في حذف المحادثة');
+    }
+  };
+
   const handleSendMessage = async (content: string) => {
     setLoading(true);
     let conversationId = activeConversation;
@@ -198,6 +218,7 @@ export const TravelAssistant = () => {
           onClose={() => setSidebarOpen(false)}
           user={user}
           onAuthClick={() => setShowAuthModal(true)}
+          onDeleteConversation={handleDeleteConversation}
         />
       ) : (
         <Sidebar
@@ -207,6 +228,7 @@ export const TravelAssistant = () => {
           onNewConversation={handleNewConversation}
           user={user}
           onAuthClick={() => setShowAuthModal(true)}
+          onDeleteConversation={handleDeleteConversation}
         />
       )}
       
