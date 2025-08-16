@@ -317,8 +317,16 @@ export const generateAIResponse = async ({ message, conversationHistory = [] }: 
     // Check if this is a travel planning request
     const isTravelRequest = message.includes('رحلة') || message.includes('سفر') || message.includes('خطة') || 
                            message.includes('جدول') || message.includes('يوم') || message.includes('زيارة') ||
+                           message.includes('عطلة') || message.includes('إجازة') || message.includes('شاطئ') ||
+                           message.includes('عائلية') || message.includes('أشخاص') || message.includes('أطفال') ||
+                           message.includes('إقامة') || message.includes('فندق') || message.includes('منتجع') ||
+                           message.includes('أنشطة') || message.includes('ترفيه') || message.includes('استجمام') ||
                            message.toLowerCase().includes('trip') || message.toLowerCase().includes('travel') ||
-                           message.toLowerCase().includes('plan') || message.toLowerCase().includes('itinerary');
+                           message.toLowerCase().includes('plan') || message.toLowerCase().includes('itinerary') ||
+                           message.toLowerCase().includes('vacation') || message.toLowerCase().includes('holiday') ||
+                           message.toLowerCase().includes('beach') || message.toLowerCase().includes('family') ||
+                           message.toLowerCase().includes('resort') || message.toLowerCase().includes('hotel') ||
+                           message.toLowerCase().includes('activities') || message.toLowerCase().includes('kids');
 
     if (isTravelRequest) {
       // For travel requests, generate structured itinerary
@@ -336,31 +344,41 @@ export const generateAIResponse = async ({ message, conversationHistory = [] }: 
 - عدد الأيام: ${days}
 - الاهتمامات: ${interests}
 
+${!travelInfo.destination ? `
+ملاحظة: المستخدم لم يحدد وجهة معينة. اقترح عليه 3 وجهات مناسبة لطلبه واختر واحدة منها لإنشاء الجدول.
+` : ''}
+
 قم بإنشاء رد يتضمن:
 1. نص وصفي مفيد باللغة العربية عن الوجهة والرحلة
-2. جدول رحلة مفصل لـ ${days} أيام في ${destination} بتنسيق JSON
+2. جدول رحلة مفصل لـ ${days} أيام ${travelInfo.destination ? `في ${destination}` : 'في الوجهة المقترحة'} بتنسيق JSON
+
+${message.includes('عائلية') || message.includes('أطفال') || message.toLowerCase().includes('family') || message.toLowerCase().includes('kids') ? 
+`تأكد من تضمين أنشطة مناسبة للعائلة والأطفال.` : ''}
+
+${message.includes('شاطئ') || message.toLowerCase().includes('beach') ? 
+`ركز على الأنشطة الشاطئية والمائية.` : ''}
 
 تنسيق الرد المطلوب:
 
-[نص وصفي للرحلة إلى ${destination} لمدة ${days} أيام باللغة العربية]
+[نص وصفي للرحلة ${travelInfo.destination ? `إلى ${destination}` : 'مع اقتراح الوجهات المناسبة'} لمدة ${days} أيام باللغة العربية]
 
 \`\`\`json
 {
-  "content": "وصف مختصر للرحلة إلى ${destination}",
-  "city": "${destination}",
+  "content": "وصف مختصر للرحلة ${travelInfo.destination ? `إلى ${destination}` : 'مع الوجهة المقترحة'}",
+  "city": "${travelInfo.destination ? destination : 'الوجهة المقترحة'}",
   "country": "اسم البلد بالإنجليزية",
   "itinerary": [
     {
       "day": 1,
       "date": "اليوم الأول",
-      "theme": "موضوع اليوم",
+      "theme": "موضوع اليوم ${message.includes('عائلية') ? '(مناسب للعائلة)' : ''}",
       "items": [
         {
           "time": "9:00 ص - 11:00 ص",
           "activity": "اسم النشاط",
-          "location": "وصف المكان والموقع",
+          "location": "وصف المكان والموقع ${message.includes('عائلية') ? '(مناسب للأطفال)' : ''}",
           "cost": 25,
-          "type": "culture"
+          "type": "${message.includes('شاطئ') ? 'culture' : 'culture'}"
         }
       ]
     }
