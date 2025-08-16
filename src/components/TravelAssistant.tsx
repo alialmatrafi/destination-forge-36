@@ -73,7 +73,6 @@ export const TravelAssistant = () => {
   };
 
   const handleSendMessage = async (content: string) => {
-    // Allow sending messages for both guests and authenticated users
     setLoading(true);
     let conversationId = activeConversation;
 
@@ -94,7 +93,7 @@ export const TravelAssistant = () => {
 
       // Get conversation history for context
       const conversationHistory = messages.map(msg => ({
-        role: msg.role,
+        role: msg.role as 'user' | 'assistant',
         content: msg.content
       }));
 
