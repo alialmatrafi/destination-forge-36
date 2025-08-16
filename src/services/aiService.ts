@@ -149,22 +149,34 @@ const extractTravelInfo = (message: string): { destination?: string; days?: numb
 
 const extractItineraryFromResponse = (response: string): { content: string; itinerary?: any[]; city?: string; country?: string } => {
   try {
-    // Try to find JSON in the response - improved regex
-    const jsonMatch = response.match(/```json\s*([\s\S]*?)\s*```/) || 
-                     response.match(/```\s*([\s\S]*?)\s*```/) ||
-                     response.match(/(\{[\s\S]*?\})/);
+    console.log('Raw AI response:', response);
+    
+    // Try multiple patterns to find JSON
+    let jsonMatch = response.match(/```json\s*([\s\S]*?)\s*```/);
+    if (!jsonMatch) {
+      jsonMatch = response.match(/```\s*(\{[\s\S]*?\})\s*```/);
+    }
+    if (!jsonMatch) {
+      jsonMatch = response.match(/(\{[\s\S]*?"itinerary"[\s\S]*?\})/);
+    }
     
     if (jsonMatch) {
       const jsonString = jsonMatch[1] || jsonMatch[0];
+      console.log('Found JSON string:', jsonString);
       
       // Clean the JSON string
       const cleanedJson = jsonString
         .replace(/^\s*```json\s*/, '')
         .replace(/\s*```\s*$/, '')
         .replace(/^\s*```\s*/, '')
+        .replace(/^\s*\{/, '{')
+        .replace(/\}\s*$/, '}')
         .trim();
       
+      console.log('Cleaned JSON:', cleanedJson);
+      
       const parsed = JSON.parse(cleanedJson);
+      console.log('Parsed JSON:', parsed);
       
       if (parsed.itinerary) {
         // Sanitize cost values to ensure they are numeric
@@ -178,7 +190,7 @@ const extractItineraryFromResponse = (response: string): { content: string; itin
         }));
         
         // Extract clean content (text before JSON)
-        const contentMatch = response.split(/```json|```/)[0];
+        const contentMatch = response.split(/```/)[0];
         const cleanContent = contentMatch
           .replace(/\{[\s\S]*?\}/g, '')
           .replace(/\n\s*\n\s*\n/g, '\n\n')
@@ -193,7 +205,8 @@ const extractItineraryFromResponse = (response: string): { content: string; itin
       }
     }
   } catch (error) {
-    console.log('Could not parse JSON from response:', error);
+    console.error('JSON parsing error:', error);
+    console.log('Response that failed to parse:', response);
   }
 
   // Clean the response from any JSON code blocks or unwanted formatting
@@ -414,39 +427,39 @@ export const generateAIResponse = async ({ message, conversationHistory = [] }: 
 - الميزانية: ${budget}
 - عدد الأشخاص: ${groupSize}
 
-تعليمات مهمة:
-1. يجب إنشاء جدول رحلة مفصل لـ ${days} أيام بتنسيق JSON
-2. إذا لم تكن الوجهة محددة، اقترح وجهة مناسبة لنوع الرحلة
-3. اجعل الأنشطة مناسبة لـ ${travelType === 'family' ? 'العائلات والأطفال' : travelType === 'romantic' ? 'الأزواج' : travelType === 'adventure' ? 'المغامرين' : travelType === 'business' ? 'رجال الأعمال' : travelType === 'beach' ? 'عشاق الشواطئ' : travelType === 'cultural' ? 'محبي الثقافة' : 'جميع الأعمار'}
-4. اجعل التكاليف مناسبة للميزانية ${budget === 'low' ? 'المحدودة' : budget === 'high' ? 'المرتفعة' : 'المتوسطة'}
-5. خطط للأنشطة بحيث تناسب ${groupSize} أشخاص
+تعليمات إجبارية - يجب اتباعها بدقة:
 
-**يجب أن يكون الرد بهذا التنسيق بالضبط:**
+1. يجب أن تكتب نصاً وصفياً مفيداً أولاً (بدون ذكر JSON)
+2. ثم يجب أن تضع JSON بالتنسيق المحدد تماماً
+3. يجب إنشاء جدول لـ ${days} أيام بالضبط
+4. يجب أن تكون الوجهة مناسبة لنوع الرحلة: ${travelType}
+5. يجب أن تكون التكاليف مناسبة للميزانية: ${budget}
+**مثال على التنسيق المطلوب:**
 
-[نص وصفي مفيد باللغة العربية عن الرحلة والوجهة - لا تذكر JSON هنا]
+مرحباً! سأساعدك في التخطيط لرحلة رائعة. إليك خطة مفصلة تناسب احتياجاتك.
 
-\`\`\`json  
+\`\`\`json
 {
-  "content": "وصف مختصر للرحلة",
-  "city": "${destination}",
-  "country": "اسم البلد بالإنجليزية",
+  "content": "خطة رحلة مخصصة",
+  "city": "اسم المدينة",
+  "country": "اسم البلد",
   "itinerary": [
     {
       "day": 1,
-      "date": "اليوم الأول",
-      "theme": "موضوع اليوم",
+      "date": "التاريخ",
+      "theme": "موضوع اليوم الأول",
       "items": [
         {
-          "time": "9:00 ص - 11:00 ص",
+          "time": "9:00 AM - 11:00 AM",
           "activity": "اسم النشاط",
           "location": "وصف المكان والموقع",
           "cost": 0,
           "type": "culture"
         },
         {
-          "time": "11:30 ص - 1:00 م",
+          "time": "1:00 PM - 3:00 PM",
           "activity": "نشاط آخر",
-          "location": "مكان آخر",
+          "location": "وصف مكان آخر",
           "cost": 15,
           "type": "food"
         }
@@ -454,19 +467,29 @@ export const generateAIResponse = async ({ message, conversationHistory = [] }: 
     },
     {
       "day": 2,
-      "date": "اليوم الثاني", 
+      "date": "التاريخ الثاني",
       "theme": "موضوع اليوم الثاني",
-      "items": [...]
+      "items": [
+        {
+          "time": "10:00 AM - 12:00 PM",
+          "activity": "نشاط اليوم الثاني",
+          "location": "مكان النشاط",
+          "cost": 20,
+          "type": "culture"
+        }
+      ]
     }
   ]
 }
 \`\`\`
 
-**مهم جداً:**
-- أنشئ ${days} أيام بالضبط في الجدول
-- استخدم أنواع الأنشطة: "culture", "food", "transport", "shopping"  
-- اجعل التكاليف أرقام صحيحة
-- لا تذكر كلمة JSON في النص الوصفي`;
+**قواعد إجبارية:**
+- يجب إنشاء ${days} أيام بالضبط
+- استخدم فقط هذه الأنواع: "culture", "food", "transport", "shopping"
+- التكاليف يجب أن تكون أرقام صحيحة فقط
+- لا تذكر كلمة JSON في النص الوصفي
+- يجب وضع JSON داخل \`\`\`json و \`\`\`
+- لا تضع أي نص بعد JSON`;
 
       const result = await model.generateContent(itineraryPrompt);
       const response = result.response;
@@ -483,15 +506,22 @@ export const generateAIResponse = async ({ message, conversationHistory = [] }: 
       };
     } else {
       // For general questions, use simple prompt
-      const generalPrompt = `${systemPrompt}${conversationContext}
+      const generalPrompt = `${SYSTEM_PROMPT}${conversationContext}
 
 طلب المستخدم: ${message}
 
-رد باللغة العربية بشكل مفيد ومختصر:`;
+إذا كان هذا طلب سفر، يجب إنشاء جدول رحلة بتنسيق JSON.
+وإلا رد باللغة العربية بشكل مفيد ومختصر:`;
 
       const result = await model.generateContent(generalPrompt);
       const response = result.response;
       const text = response.text();
+      
+      // Try to extract itinerary even from general responses
+      const extractedData = extractItineraryFromResponse(text);
+      if (extractedData.itinerary) {
+        return extractedData;
+      }
       
       return {
         content: text.trim()
