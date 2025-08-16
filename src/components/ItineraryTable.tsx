@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Clock, MapPin, DollarSign, ThumbsUp, ThumbsDown, FileText } from "lucide-react";
+import { Clock, MapPin, DollarSign, ThumbsUp, ThumbsDown, FileText, ExternalLink } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
@@ -134,6 +134,11 @@ export const ItineraryTable = ({ itinerary: propItinerary, city = "Tokyo", onEdi
     total + day.items.reduce((dayTotal, item) => dayTotal + item.cost, 0), 0
   );
 
+  const createGoogleMapsUrl = (location: string, activity: string) => {
+    const query = encodeURIComponent(`${activity} ${location}`);
+    return `https://www.google.com/maps/search/?api=1&query=${query}`;
+  };
+
   const getTypeColor = (type: string) => {
     switch (type) {
       case "culture": return "bg-travel-blue-light text-travel-blue-dark";
@@ -244,9 +249,17 @@ export const ItineraryTable = ({ itinerary: propItinerary, city = "Tokyo", onEdi
                         {item.activity}
                       </h4>
                       
-                      <div className="flex items-center gap-1 text-xs sm:text-sm text-muted-foreground">
+                      <div className="flex items-center gap-1 text-xs sm:text-sm">
                         <MapPin className="w-3 h-3" />
-                        {item.location}
+                        <a
+                          href={createGoogleMapsUrl(item.location, item.activity)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-travel-blue hover:text-travel-blue-dark hover:underline transition-colors flex items-center gap-1"
+                        >
+                          {item.location}
+                          <ExternalLink className="w-3 h-3" />
+                        </a>
                       </div>
                     </div>
                     
