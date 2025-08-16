@@ -1,4 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import systemPrompt from './system_prompt.txt?raw';
 
 // Check if API key is available
 const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
@@ -9,43 +10,8 @@ if (!apiKey) {
 // Initialize Gemini AI
 const genAI = apiKey ? new GoogleGenerativeAI(apiKey) : null;
 
-interface AIRequest {
-  message: string;
-  conversationHistory?: Array<{ role: 'user' | 'assistant'; content: string }>;
-}
-
-interface AIResponse {
-  content: string;
-  itinerary?: any[];
-  city?: string;
-  country?: string;
-}
-
-// System prompt for travel assistant
-const SYSTEM_PROMPT = `أنت مساعد سفر ذكي ومتخصص باللغة العربية. مهمتك هي:
-
-1. فهم طلبات السفر من المستخدمين بدقة
-2. تقديم خطط سفر مفصلة ومخصصة
-3. اقتراح أنشطة وأماكن مناسبة للميزانية والاهتمامات
-4. تقديم معلومات عملية ومفيدة
-
-قواعد مهمة للرد:
-- لا تُظهر أي أكواد JSON أو برمجية في ردك للمستخدم
-- اكتب ردود طبيعية ومفهومة باللغة العربية
-- إذا طُلب منك إنشاء جدول رحلة، اكتب وصفاً مفيداً أولاً
-- لا تستخدم علامات الكود أو التنسيق البرمجي في الرد المرئي
-
-عند الرد على طلب سفر:
-- اذكر اسم المدينة/البلد المطلوب
-- قدم خطة يومية مفصلة
-- اذكر التكاليف التقريبية
-- اقترح أنشطة متنوعة (ثقافية، ترفيهية، طعام، تسوق)
-- اقترح أنشطة متنوعة (ثقافية، ترفيهية، طعام، نقل)
-- كن ودوداً ومفيداً
-
-إذا طلب المستخدم خطة سفر، اكتب رداً وصفياً مفيداً باللغة العربية فقط.
-
-رد دائماً باللغة العربية ما لم يطلب المستخدم لغة أخرى.`;
+// Use imported system prompt
+const SYSTEM_PROMPT = systemPrompt;
 
 // Function to extract structured data from AI response
 const extractItineraryFromResponse = (response: string): { content: string; itinerary?: any[]; city?: string; country?: string } => {
