@@ -1,8 +1,35 @@
 import { supabase, Conversation, Message, Itinerary, GuestSession } from '@/lib/supabase';
 
+// Local storage fallback when Supabase is not configured
+const useLocalStorage = !supabase;
+
+const localStorageService = {
+  getConversations(): Conversation[] {
+    const stored = localStorage.getItem('travel-conversations');
+    return stored ? JSON.parse(stored) : [];
+  },
+  
+  saveConversations(conversations: Conversation[]) {
+    localStorage.setItem('travel-conversations', JSON.stringify(conversations));
+  },
+  
+  getMessages(conversationId: string): Message[] {
+    const stored = localStorage.getItem(`travel-messages-${conversationId}`);
+    return stored ? JSON.parse(stored) : [];
+  },
+  
+  saveMessages(conversationId: string, messages: Message[]) {
+    localStorage.setItem(`travel-messages-${conversationId}`, JSON.stringify(messages));
+  }
+};
+
 export const conversationService = {
   // Create or get guest session
   async ensureGuestSession(): Promise<string> {
+    if (useLocalStorage) {
+      return 'local-session';
+    }
+    
     const sessionId = localStorage.getItem('guest-session-id');
     if (!sessionId) {
       throw new Error('No guest session found');
@@ -32,6 +59,10 @@ export const conversationService = {
 
   // Get all conversations for the current user
   async getConversations(): Promise<Conversation[]> {
+    if (useLocalStorage) {
+      return localStorageService.getConversations();
+    }
+    
     const { data: { user } } = await supabase.auth.getUser();
     
     const { data, error } = await supabase
@@ -45,6 +76,22 @@ export const conversationService = {
 
   // Create a new conversation
   async createConversation(title: string): Promise<Conversation> {
+    if (useLocalStorage) {
+      const conversations = localStorageService.getConversations();
+      const newConversation: Conversation = {
+        id: Date.now().toString(),
+        title: title.substring(0, 100),
+        user_id: null,
+        guest_session_id: 'local-session',
+        is_guest: true,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+      conversations.unshift(newConversation);
+      localStorageService.saveConversations(conversations);
+      return newConversation;
+    }
+    
     const { data: { user } } = await supabase.auth.getUser();
     
     let insertData: any = {
@@ -74,6 +121,10 @@ export const conversationService = {
 
   // Migrate guest data to user account when they sign up/in
   async migrateGuestDataToUser(): Promise<void> {
+    if (useLocalStorage) {
+      return; // No migration needed for local storage
+    }
+    
     const sessionId = localStorage.getItem('guest-session-id');
     if (!sessionId) return;
 
@@ -96,6 +147,17 @@ export const conversationService = {
 
   // Update conversation title
   async updateConversation(id: string, title: string): Promise<void> {
+    if (useLocalStorage) {
+      const conversations = localStorageService.getConversations();
+      const index = conversations.findIndex(c => c.id === id);
+      if (index !== -1) {
+        conversations[index].title = title;
+        conversations[index].updated_at = new Date().toISOString();
+        localStorageService.saveConversations(conversations);
+      }
+      return;
+    }
+    
     const { error } = await supabase
       .from('conversations')
       .update({ title, updated_at: new Date().toISOString() })
@@ -106,6 +168,14 @@ export const conversationService = {
 
   // Delete a conversation
   async deleteConversation(id: string): Promise<void> {
+    if (useLocalStorage) {
+      const conversations = localStorageService.getConversations();
+      const filtered = conversations.filter(c => c.id !== id);
+      localStorageService.saveConversations(filtered);
+      localStorage.removeItem(`travel-messages-${id}`);
+      return;
+    }
+    
     const { error } = await supabase
       .from('conversations')
       .delete()
@@ -116,6 +186,10 @@ export const conversationService = {
 
   // Get messages for a conversation
   async getMessages(conversationId: string): Promise<Message[]> {
+    if (useLocalStorage) {
+      return localStorageService.getMessages(conversationId);
+    }
+    
     const { data, error } = await supabase
       .from('messages')
       .select('*')
@@ -128,6 +202,21 @@ export const conversationService = {
 
   // Add a message to a conversation
   async addMessage(conversationId: string, content: string, role: 'user' | 'assistant', metadata?: any): Promise<Message> {
+    if (useLocalStorage) {
+      const messages = localStorageService.getMessages(conversationId);
+      const newMessage: Message = {
+        id: Date.now().toString(),
+        conversation_id: conversationId,
+        content,
+        role,
+        metadata: metadata || {},
+        created_at: new Date().toISOString()
+      };
+      messages.push(newMessage);
+      localStorageService.saveMessages(conversationId, messages);
+      return newMessage;
+    }
+    
     const { data, error } = await supabase
       .from('messages')
       .insert({
@@ -145,6 +234,20 @@ export const conversationService = {
 
   // Save or update itinerary
   async saveItinerary(conversationId: string, city: string, country: string, days: any[], totalCost: number): Promise<Itinerary> {
+    if (useLocalStorage) {
+      // For local storage, we'll store itinerary data in the message metadata
+      return {
+        id: Date.now().toString(),
+        conversation_id: conversationId,
+        city,
+        country,
+        days,
+        total_cost: totalCost,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+    }
+    
     // Check if itinerary already exists
     const { data: existing } = await supabase
       .from('itineraries')
@@ -190,6 +293,10 @@ export const conversationService = {
 
   // Get itinerary for a conversation
   async getItinerary(conversationId: string): Promise<Itinerary | null> {
+    if (useLocalStorage) {
+      return null; // Itinerary data is stored in message metadata for local storage
+    }
+    
     const { data, error } = await supabase
       .from('itineraries')
       .select('*')
