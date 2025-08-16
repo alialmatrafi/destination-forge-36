@@ -16,11 +16,23 @@ const SYSTEM_PROMPT = systemPrompt;
 // Function to extract structured data from AI response
 const extractItineraryFromResponse = (response: string): { content: string; itinerary?: any[]; city?: string; country?: string } => {
   try {
-    // Try to find JSON in the response
-    const jsonMatch = response.match(/```json\s*(\{[\s\S]*?\})\s*```/) || response.match(/(\{[\s\S]*?\})/);
+    // Try to find JSON in the response - improved regex
+    const jsonMatch = response.match(/```json\s*([\s\S]*?)\s*```/) || 
+                     response.match(/```\s*([\s\S]*?)\s*```/) ||
+                     response.match(/(\{[\s\S]*?\})/);
+    
     if (jsonMatch) {
       const jsonString = jsonMatch[1] || jsonMatch[0];
-      const parsed = JSON.parse(jsonString);
+      
+      // Clean the JSON string
+      const cleanedJson = jsonString
+        .replace(/^\s*```json\s*/, '')
+        .replace(/\s*```\s*$/, '')
+        .replace(/^\s*```\s*/, '')
+        .trim();
+      
+      const parsed = JSON.parse(cleanedJson);
+      
       if (parsed.itinerary) {
         // Sanitize cost values to ensure they are numeric
         parsed.itinerary = parsed.itinerary.map((day: any) => ({
@@ -31,8 +43,16 @@ const extractItineraryFromResponse = (response: string): { content: string; itin
                   (typeof item.cost === 'string' ? parseFloat(item.cost) || 0 : 0)
           })) || []
         }));
+        
+        // Extract clean content (text before JSON)
+        const contentMatch = response.split(/```json|```/)[0];
+        const cleanContent = contentMatch
+          .replace(/\{[\s\S]*?\}/g, '')
+          .replace(/\n\s*\n\s*\n/g, '\n\n')
+          .trim();
+        
         return {
-          content: parsed.content || response.replace(/```json[\s\S]*?```/g, '').trim(),
+          content: cleanContent || parsed.content || 'خطة رحلة مخصصة',
           itinerary: parsed.itinerary,
           city: parsed.city,
           country: parsed.country
@@ -40,7 +60,7 @@ const extractItineraryFromResponse = (response: string): { content: string; itin
       }
     }
   } catch (error) {
-    console.log('Could not parse JSON from response, using text only');
+    console.log('Could not parse JSON from response:', error);
   }
 
   // Clean the response from any JSON code blocks or unwanted formatting
@@ -123,38 +143,36 @@ export const generateAIResponse = async ({ message, conversationHistory = [] }: 
       });
     }
 
-    // Create the full prompt
-    const fullPrompt = `${SYSTEM_PROMPT}${conversationContext}\n\nطلب المستخدم الحالي: ${message}
+    // Check if this is a travel planning request
+    const isTravelRequest = message.includes('رحلة') || message.includes('سفر') || message.includes('خطة') || 
+                           message.includes('جدول') || message.includes('يوم') || message.includes('زيارة') ||
+                           message.toLowerCase().includes('trip') || message.toLowerCase().includes('travel') ||
+                           message.toLowerCase().includes('plan') || message.toLowerCase().includes('itinerary');
 
-إذا كان هذا طلب لخطة سفر، قدم رداً يتضمن:
-1. نص وصفي مفيد
-2. إذا أمكن، خطة يومية مفصلة بتنسيق JSON
+    if (isTravelRequest) {
+      // For travel requests, generate structured itinerary
+      const itineraryPrompt = `${systemPrompt}${conversationContext}
 
-رد باللغة العربية:`;
+طلب المستخدم: ${message}
 
-    const result = await model.generateContent(fullPrompt);
-    const response = result.response;
-    const text = response.text();
+قم بإنشاء رد يتضمن:
+1. نص وصفي مفيد باللغة العربية
+2. جدول رحلة مفصل بتنسيق JSON
 
-    // Extract structured data from response
-    const extractedData = extractItineraryFromResponse(text);
+تنسيق الرد المطلوب:
 
-    // If we have a travel request but no structured itinerary, try to generate one
-    if (!extractedData.itinerary && (message.includes('رحلة') || message.includes('سفر') || message.includes('خطة') || message.includes('جدول'))) {
-      try {
-        const itineraryPrompt = `بناءً على طلب السفر: "${message}"
+[نص وصفي للرحلة باللغة العربية]
 
-قم بإنشاء خطة سفر مفصلة بتنسيق JSON فقط، بدون أي نص إضافي:
-
+\`\`\`json
 {
   "content": "وصف مختصر للرحلة",
   "city": "اسم المدينة بالإنجليزية",
-  "country": "اسم البلد بالإنجليزية", 
+  "country": "اسم البلد بالإنجليزية",
   "itinerary": [
     {
       "day": 1,
-      "date": "اليوم الأول",
-      "theme": "وصف اليوم",
+      "date": "التاريخ أو اليوم الأول",
+      "theme": "موضوع اليوم",
       "items": [
         {
           "time": "9:00 ص - 11:00 ص",
@@ -167,48 +185,41 @@ export const generateAIResponse = async ({ message, conversationHistory = [] }: 
     }
   ]
 }
+\`\`\`
 
-أنواع الأنشطة المتاحة: "culture", "food", "transport"`;
+أنواع الأنشطة المتاحة: "culture", "food", "transport", "shopping"
+تأكد من أن التكاليف أرقام صحيحة.`;
 
-        const itineraryResult = await model.generateContent(itineraryPrompt);
-        const itineraryText = itineraryResult.response.text();
-        
-        try {
-          const cleanJson = itineraryText.replace(/```json\n?|\n?```/g, '').trim();
-          const itineraryData = JSON.parse(cleanJson);
-          
-          // Sanitize cost values in the generated itinerary
-          if (itineraryData.itinerary) {
-            itineraryData.itinerary = itineraryData.itinerary.map((day: any) => ({
-              ...day,
-              items: day.items?.map((item: any) => ({
-                ...item,
-                cost: typeof item.cost === 'number' ? item.cost : 
-                      (typeof item.cost === 'string' ? parseFloat(item.cost) || 0 : 0)
-              })) || []
-            }));
-          }
-          
-          return {
-            content: extractedData.content,
-            itinerary: itineraryData.itinerary,
-            city: itineraryData.city,
-            country: itineraryData.country
-          };
-        } catch (parseError) {
-          console.log('Could not parse itinerary JSON, using text response only');
-        }
-      } catch (itineraryError) {
-        console.log('Could not generate structured itinerary');
-      }
+      const result = await model.generateContent(itineraryPrompt);
+      const response = result.response;
+      const text = response.text();
+      
+      // Extract structured data from response
+      const extractedData = extractItineraryFromResponse(text);
+      
+      return {
+        content: extractedData.content,
+        itinerary: extractedData.itinerary,
+        city: extractedData.city,
+        country: extractedData.country
+      };
+    } else {
+      // For general questions, use simple prompt
+      const generalPrompt = `${systemPrompt}${conversationContext}
+
+طلب المستخدم: ${message}
+
+رد باللغة العربية بشكل مفيد ومختصر:`;
+
+      const result = await model.generateContent(generalPrompt);
+      const response = result.response;
+      const text = response.text();
+      
+      return {
+        content: text.trim()
+      };
     }
 
-    return {
-      content: extractedData.content,
-      itinerary: extractedData.itinerary,
-      city: extractedData.city,
-      country: extractedData.country
-    };
 
   } catch (error) {
     console.error('Error calling Gemini API:', error);
