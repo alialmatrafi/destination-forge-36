@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
+import { conversationService } from '@/services/conversationService';
 
 export const useAuth = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -13,6 +14,11 @@ export const useAuth = () => {
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
+      
+      // If user just signed in, migrate guest data
+      if (session?.user) {
+        conversationService.migrateGuestDataToUser().catch(console.error);
+      }
     });
 
     // Listen for auth changes
@@ -22,6 +28,11 @@ export const useAuth = () => {
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
+      
+      // If user just signed in, migrate guest data
+      if (session?.user) {
+        conversationService.migrateGuestDataToUser().catch(console.error);
+      }
     });
 
     return () => subscription.unsubscribe();

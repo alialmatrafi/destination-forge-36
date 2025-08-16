@@ -7,7 +7,27 @@ if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error('Missing Supabase environment variables');
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+  },
+  global: {
+    headers: {
+      'x-session-id': getOrCreateSessionId(),
+    },
+  },
+});
+
+// Generate or get existing session ID for guests
+function getOrCreateSessionId(): string {
+  let sessionId = localStorage.getItem('guest-session-id');
+  if (!sessionId) {
+    sessionId = 'guest_' + Math.random().toString(36).substring(2) + Date.now().toString(36);
+    localStorage.setItem('guest-session-id', sessionId);
+  }
+  return sessionId;
+}
 
 // Types
 export interface Profile {
@@ -19,9 +39,18 @@ export interface Profile {
   updated_at: string;
 }
 
+export interface GuestSession {
+  id: string;
+  session_id: string;
+  created_at: string;
+  expires_at: string;
+}
+
 export interface Conversation {
   id: string;
-  user_id: string;
+  user_id?: string;
+  guest_session_id?: string;
+  is_guest: boolean;
   title: string;
   created_at: string;
   updated_at: string;

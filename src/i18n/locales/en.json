@@ -9,7 +9,8 @@
     "noConversations": "No conversations yet",
     "startFirst": "Start your first conversation",
     "guestUser": "Guest User",
-    "signInToSave": "Sign in to save trips"
+    "signInToSave": "Sign in to save trips",
+    "signInToKeep": "Sign in to keep your data"
   },
   "chat": {
     "welcomeTitle": "Plan Your Perfect Trip with AI",

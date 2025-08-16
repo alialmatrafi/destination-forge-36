@@ -150,7 +150,7 @@ export const Sidebar = ({
                 onClick={onAuthClick}
                 className="text-xs text-travel-blue hover:underline"
               >
-                {t('sidebar.signInToSave')}
+                {t('sidebar.signInToKeep')}
               </button>
             </div>
           </div>

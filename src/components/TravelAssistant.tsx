@@ -27,14 +27,8 @@ export const TravelAssistant = () => {
 
   // Load conversations when user is authenticated
   useEffect(() => {
-    if (user) {
-      loadConversations();
-    } else {
-      setConversations([]);
-      setActiveConversation(null);
-      setMessages([]);
-      setShowWelcome(true);
-    }
+    // Always load conversations (for both authenticated users and guests)
+    loadConversations();
   }, [user]);
 
   // Load messages when active conversation changes
@@ -66,11 +60,7 @@ export const TravelAssistant = () => {
   };
 
   const handleNewConversation = async () => {
-    if (!user) {
-      setShowAuthModal(true);
-      return;
-    }
-
+    // Allow new conversations for both guests and authenticated users
     setActiveConversation(null);
     setMessages([]);
     setShowWelcome(true);
@@ -83,11 +73,7 @@ export const TravelAssistant = () => {
   };
 
   const handleSendMessage = async (content: string) => {
-    if (!user) {
-      setShowAuthModal(true);
-      return;
-    }
-
+    // Allow sending messages for both guests and authenticated users
     setLoading(true);
     let conversationId = activeConversation;
 

@@ -1,8 +1,39 @@
-import { supabase, Conversation, Message, Itinerary } from '@/lib/supabase';
+import { supabase, Conversation, Message, Itinerary, GuestSession } from '@/lib/supabase';
 
 export const conversationService = {
+  // Create or get guest session
+  async ensureGuestSession(): Promise<string> {
+    const sessionId = localStorage.getItem('guest-session-id');
+    if (!sessionId) {
+      throw new Error('No guest session found');
+    }
+
+    // Check if guest session exists in database
+    const { data: existingSession } = await supabase
+      .from('guest_sessions')
+      .select('id')
+      .eq('session_id', sessionId)
+      .single();
+
+    if (!existingSession) {
+      // Create new guest session
+      const { data, error } = await supabase
+        .from('guest_sessions')
+        .insert({ session_id: sessionId })
+        .select('id')
+        .single();
+
+      if (error) throw error;
+      return data.id;
+    }
+
+    return existingSession.id;
+  },
+
   // Get all conversations for the current user
   async getConversations(): Promise<Conversation[]> {
+    const { data: { user } } = await supabase.auth.getUser();
+    
     const { data, error } = await supabase
       .from('conversations')
       .select('*')
@@ -15,19 +46,52 @@ export const conversationService = {
   // Create a new conversation
   async createConversation(title: string): Promise<Conversation> {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) throw new Error('User not authenticated');
+    
+    let insertData: any = {
+      title: title.substring(0, 100), // Limit title length
+    };
+
+    if (user) {
+      // Authenticated user
+      insertData.user_id = user.id;
+      insertData.is_guest = false;
+    } else {
+      // Guest user
+      const guestSessionId = await this.ensureGuestSession();
+      insertData.guest_session_id = guestSessionId;
+      insertData.is_guest = true;
+    }
 
     const { data, error } = await supabase
       .from('conversations')
-      .insert({
-        user_id: user.id,
-        title: title.substring(0, 100), // Limit title length
-      })
+      .insert(insertData)
       .select()
       .single();
 
     if (error) throw error;
     return data;
+  },
+
+  // Migrate guest data to user account when they sign up/in
+  async migrateGuestDataToUser(): Promise<void> {
+    const sessionId = localStorage.getItem('guest-session-id');
+    if (!sessionId) return;
+
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    // Call the database function to migrate data
+    const { error } = await supabase.rpc('migrate_guest_data_to_user', {
+      p_session_id: sessionId,
+      p_user_id: user.id
+    });
+
+    if (error) {
+      console.error('Error migrating guest data:', error);
+    } else {
+      // Clear guest session from localStorage after successful migration
+      localStorage.removeItem('guest-session-id');
+    }
   },
 
   // Update conversation title

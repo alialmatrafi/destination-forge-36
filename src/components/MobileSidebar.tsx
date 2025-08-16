@@ -131,7 +131,7 @@ export const MobileSidebar = ({
                   </div>
                   <div className="text-xs text-muted-foreground mt-1">
                     {conversation.date}
-                  </div>
+                  {t('sidebar.signInToKeep')}
                 </button>
               ))}
               
