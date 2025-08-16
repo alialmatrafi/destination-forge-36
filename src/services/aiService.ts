@@ -17,6 +17,16 @@ const SYSTEM_PROMPT = systemPrompt;
 const extractTravelInfo = (message: string): { destination?: string; days?: number; interests?: string[]; travelType?: string; budget?: string; groupSize?: number } => {
   const text = message.toLowerCase();
   
+  // Detect language of the input message
+  const detectLanguage = (text: string): 'ar' | 'en' => {
+    // Check for Arabic characters
+    const arabicPattern = /[\u0600-\u06FF\u0750-\u077F]/;
+    if (arabicPattern.test(text)) {
+      return 'ar';
+    }
+    return 'en';
+  };
+  
   // Extract destination
   let destination = '';
   const destinations = [
@@ -389,14 +399,30 @@ export const generateAIResponse = async ({ message, conversationHistory = [] }: 
       throw new Error('Gemini AI is not properly configured. Please check your API key.');
     }
 
+    // Detect the language of the user's message
+    const detectLanguage = (text: string): 'ar' | 'en' => {
+      // Check for Arabic characters
+      const arabicPattern = /[\u0600-\u06FF\u0750-\u077F]/;
+      if (arabicPattern.test(text)) {
+        return 'ar';
+      }
+      return 'en';
+    };
+
+    const userLanguage = detectLanguage(message);
+    const isArabic = userLanguage === 'ar';
+
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     // Build conversation context
     let conversationContext = '';
     if (conversationHistory.length > 0) {
-      conversationContext = '\n\nسياق المحادثة السابقة:\n';
+      conversationContext = isArabic ? '\n\nسياق المحادثة السابقة:\n' : '\n\nPrevious conversation context:\n';
       conversationHistory.slice(-5).forEach(msg => {
-        conversationContext += `${msg.role === 'user' ? 'المستخدم' : 'المساعد'}: ${msg.content}\n`;
+        const roleLabel = msg.role === 'user' 
+          ? (isArabic ? 'المستخدم' : 'User')
+          : (isArabic ? 'المساعد' : 'Assistant');
+        conversationContext += `${roleLabel}: ${msg.content}\n`;
       });
     }
 
@@ -535,12 +561,38 @@ export const generateAIResponse = async ({ message, conversationHistory = [] }: 
       };
     } else {
       // For general questions, use simple prompt
-      const generalPrompt = `${SYSTEM_PROMPT}${conversationContext}
+      const systemPromptText = isArabic ? SYSTEM_PROMPT : `You are a smart travel assistant. Your task is to:
 
-طلب المستخدم: ${message}
+1. Understand travel requests from users accurately
+2. Provide detailed and customized travel plans
+3. Suggest activities and places suitable for budget and interests
+4. Provide practical and useful information
 
-إذا كان هذا طلب سفر، يجب إنشاء جدول رحلة بتنسيق JSON.
-وإلا رد باللغة العربية بشكل مفيد ومختصر:`;
+Important response rules:
+- Do not show any JSON codes or programming in your response to the user
+- Write natural and understandable responses in English
+- If asked to create a travel itinerary, write a helpful description first
+- Do not use code marks or programming formatting in the visible response
+
+When responding to a travel request:
+- Mention the requested city/country name
+- Provide a detailed daily plan
+- Mention approximate costs
+- Suggest diverse activities (cultural, entertainment, food, transport)
+- Be friendly and helpful
+
+If the user requests a travel plan, write a helpful descriptive response in English only.
+
+Always respond in English unless the user requests another language.`;
+
+      const generalPrompt = `${systemPromptText}${conversationContext}
+
+${isArabic ? 'طلب المستخدم' : 'User request'}: ${message}
+
+${isArabic ? 'إذا كان هذا طلب سفر، يجب إنشاء جدول رحلة بتنسيق JSON.' : 'If this is a travel request, create a travel itinerary in JSON format.'}
+${isArabic ? 'وإلا رد باللغة العربية بشكل مفيد ومختصر:' : 'Otherwise respond in English in a helpful and concise manner:'}
+
+${isArabic ? 'رد دائماً باللغة العربية.' : 'Always respond in English.'}`;
 
       const result = await model.generateContent(generalPrompt);
       const response = result.response;
@@ -561,9 +613,23 @@ export const generateAIResponse = async ({ message, conversationHistory = [] }: 
   } catch (error) {
     console.error('Error calling Gemini API:', error);
     
+    // Detect language for error message
+    const detectLanguage = (text: string): 'ar' | 'en' => {
+      const arabicPattern = /[\u0600-\u06FF\u0750-\u077F]/;
+      if (arabicPattern.test(text)) {
+        return 'ar';
+      }
+      return 'en';
+    };
+
+    const userLanguage = detectLanguage(message);
+    const isArabic = userLanguage === 'ar';
+    
     // Fallback response
     return {
-      content: 'عذراً، حدث خطأ في الاتصال بخدمة الذكاء الاصطناعي. يرجى المحاولة مرة أخرى.',
+      content: isArabic 
+        ? 'عذراً، حدث خطأ في الاتصال بخدمة الذكاء الاصطناعي. يرجى المحاولة مرة أخرى.'
+        : 'Sorry, there was an error connecting to the AI service. Please try again.',
     };
   }
 };
