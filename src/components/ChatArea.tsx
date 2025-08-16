@@ -61,11 +61,13 @@ export const ChatArea = ({ messages, onSendMessage, isWelcomeMode, onMenuClick }
   };
 
   const handleVoiceTranscript = (transcript: string) => {
-    setInput(transcript);
+    setInput(prev => prev + transcript);
     // Auto-resize textarea
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
       textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 200)}px`;
+      // Focus the textarea so user can edit
+      textareaRef.current.focus();
     }
   };
 

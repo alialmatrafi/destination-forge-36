@@ -43,18 +43,18 @@ export const useVoiceRecording = (): UseVoiceRecordingReturn => {
 
       recognition.onresult = (event) => {
         let finalTranscript = '';
-        let interimTranscript = '';
 
         for (let i = event.resultIndex; i < event.results.length; i++) {
           const transcript = event.results[i][0].transcript;
           if (event.results[i].isFinal) {
             finalTranscript += transcript;
-          } else {
-            interimTranscript += transcript;
           }
         }
 
-        setTranscript(finalTranscript || interimTranscript);
+        // Only update transcript with final results
+        if (finalTranscript) {
+          setTranscript(finalTranscript);
+        }
       };
 
       recognition.onerror = (event) => {
@@ -80,6 +80,8 @@ export const useVoiceRecording = (): UseVoiceRecordingReturn => {
       recognitionRef.current = null;
     }
     setIsRecording(false);
+    // Clear transcript after stopping to prevent reuse
+    setTimeout(() => setTranscript(''), 100);
   }, []);
 
   return {

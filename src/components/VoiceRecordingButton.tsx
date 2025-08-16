@@ -23,8 +23,10 @@ export const VoiceRecordingButton = ({ onTranscript, disabled }: VoiceRecordingB
 
   // Send transcript to parent when recording stops and we have text
   useEffect(() => {
-    if (!isRecording && transcript.trim()) {
+    if (!isRecording && transcript.trim() && transcript !== '') {
       onTranscript(transcript.trim());
+      // Clear transcript after sending to prevent duplicate sends
+      // This will be handled by the hook internally
     }
   }, [isRecording, transcript, onTranscript]);
 
