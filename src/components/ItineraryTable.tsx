@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { analyticsService } from "@/services/analyticsService";
 
 interface ItineraryItem {
   time: string;
@@ -107,6 +108,9 @@ export const ItineraryTable = ({ itinerary: propItinerary, city = "Tokyo", onEdi
     setLocalItinerary(newItinerary);
     onEdit?.(newItinerary);
     setEditingItem(null);
+    
+    // Track edit
+    analyticsService.trackItineraryEdit('item_edit', city);
   };
 
   const handleDeleteItem = (dayIndex: number, itemIndex: number) => {
@@ -114,6 +118,9 @@ export const ItineraryTable = ({ itinerary: propItinerary, city = "Tokyo", onEdi
     newItinerary[dayIndex].items.splice(itemIndex, 1);
     setLocalItinerary(newItinerary);
     onEdit?.(newItinerary);
+    
+    // Track deletion
+    analyticsService.trackItineraryEdit('item_delete', city);
   };
 
   const handleAddItem = (dayIndex: number) => {
@@ -128,6 +135,9 @@ export const ItineraryTable = ({ itinerary: propItinerary, city = "Tokyo", onEdi
     newItinerary[dayIndex].items.push(newItem);
     setLocalItinerary(newItinerary);
     onEdit?.(newItinerary);
+    
+    // Track addition
+    analyticsService.trackItineraryEdit('item_add', city);
   };
 
   const totalCost = localItinerary.reduce((total, day) => 
@@ -330,7 +340,13 @@ export const ItineraryTable = ({ itinerary: propItinerary, city = "Tokyo", onEdi
             <Button
               variant={feedback === "up" ? "default" : "outline"}
               size="sm"
-              onClick={() => setFeedback(feedback === "up" ? null : "up")}
+              onClick={() => {
+                const newFeedback = feedback === "up" ? null : "up";
+                setFeedback(newFeedback);
+                if (newFeedback === "up") {
+                  analyticsService.trackFeedback('helpful', `Itinerary for ${city}`);
+                }
+              }}
               className="gap-1 text-xs sm:text-sm"
             >
               <ThumbsUp className="w-4 h-4" />
@@ -339,7 +355,13 @@ export const ItineraryTable = ({ itinerary: propItinerary, city = "Tokyo", onEdi
             <Button
               variant={feedback === "down" ? "destructive" : "outline"}
               size="sm"
-              onClick={() => setFeedback(feedback === "down" ? null : "down")}
+              onClick={() => {
+                const newFeedback = feedback === "down" ? null : "down";
+                setFeedback(newFeedback);
+                if (newFeedback === "down") {
+                  analyticsService.trackFeedback('not_helpful', `Itinerary for ${city}`);
+                }
+              }}
               className="gap-1 text-xs sm:text-sm"
             >
               <ThumbsDown className="w-4 h-4" />

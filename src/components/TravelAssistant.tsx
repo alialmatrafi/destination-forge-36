@@ -9,6 +9,7 @@ import { MobileSidebar } from "./MobileSidebar";
 import { AuthModal } from "./AuthModal";
 import { conversationService } from "@/services/conversationService";
 import { generateAIResponse } from "@/services/aiService";
+import { analyticsService } from "@/services/analyticsService";
 import { toast } from "sonner";
 import type { Conversation, Message } from "@/lib/supabase";
 
@@ -94,9 +95,13 @@ export const TravelAssistant = () => {
 
   const handleSendMessage = async (content: string) => {
     setLoading(true);
+    const startTime = Date.now();
     let conversationId = activeConversation;
 
     try {
+      // Track message sent
+      await analyticsService.trackMessageSent(content);
+
       // Create new conversation if needed
       if (!conversationId) {
         const title = content.length > 50 ? content.substring(0, 50) + '...' : content;
@@ -123,6 +128,8 @@ export const TravelAssistant = () => {
         conversationHistory: conversationHistory
       });
 
+      const responseTime = Date.now() - startTime;
+
       // Add AI message with itinerary data
       const assistantMessage = await conversationService.addMessage(
         conversationId,
@@ -136,6 +143,19 @@ export const TravelAssistant = () => {
       );
 
       setMessages(prev => [...prev, assistantMessage]);
+
+      // Track itinerary generation if provided
+      if (aiResponse.itinerary && aiResponse.city) {
+        await analyticsService.trackItineraryGenerated(
+          aiResponse.city,
+          aiResponse.itinerary.length,
+          true,
+          responseTime,
+          'general', // Could be extracted from content
+          'medium',  // Could be extracted from content
+          2          // Could be extracted from content
+        );
+      }
 
       // Save itinerary if provided
       if (aiResponse.itinerary && aiResponse.city) {
@@ -154,6 +174,15 @@ export const TravelAssistant = () => {
 
     } catch (error) {
       console.error('Error sending message:', error);
+      
+      // Track failed generation
+      await analyticsService.trackItineraryGenerated(
+        'unknown',
+        0,
+        false,
+        Date.now() - startTime
+      );
+      
       toast.error(t('errors.sendMessage'));
     } finally {
       setLoading(false);
@@ -164,6 +193,12 @@ export const TravelAssistant = () => {
     if (!activeConversation) return;
 
     try {
+      // Track itinerary edit
+      const message = messages.find(msg => msg.id === messageId);
+      if (message?.metadata?.city) {
+        await analyticsService.trackItineraryEdit('user_edit', message.metadata.city);
+      }
+
       // Update the message in the UI
       setMessages(prev => prev.map(msg => 
         msg.id === messageId 
