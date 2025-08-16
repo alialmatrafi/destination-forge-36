@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Clock, MapPin, DollarSign, ThumbsUp, ThumbsDown, FileText, ExternalLink } from "lucide-react";
+import { Clock, MapPin, DollarSign, ThumbsUp, ThumbsDown, FileText, ExternalLink, Utensils, Landmark, Car, ShoppingBag } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
@@ -154,7 +154,18 @@ export const ItineraryTable = ({ itinerary: propItinerary, city = "Tokyo", onEdi
       case "culture": return "bg-travel-blue-light text-travel-blue-dark";
       case "food": return "bg-orange-100 text-orange-700";
       case "transport": return "bg-green-100 text-green-700";
+      case "shopping": return "bg-purple-100 text-purple-700";
       default: return "bg-gray-100 text-gray-700";
+    }
+  };
+
+  const getTypeIcon = (type: string) => {
+    switch (type) {
+      case "culture": return <Landmark className="w-3 h-3" />;
+      case "food": return <Utensils className="w-3 h-3" />;
+      case "transport": return <Car className="w-3 h-3" />;
+      case "shopping": return <ShoppingBag className="w-3 h-3" />;
+      default: return <Clock className="w-3 h-3" />;
     }
   };
 
@@ -251,7 +262,10 @@ export const ItineraryTable = ({ itinerary: propItinerary, city = "Tokyo", onEdi
                           {item.time}
                         </span>
                         <Badge className={`${getTypeColor(item.type)} text-xs`}>
-                          {t(`itinerary.types.${item.type}`)}
+                          <span className="flex items-center gap-1">
+                            {getTypeIcon(item.type)}
+                            {t(`voice.types.${item.type}`)}
+                          </span>
                         </Badge>
                       </div>
                       
