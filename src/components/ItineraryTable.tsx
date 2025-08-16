@@ -140,8 +140,55 @@ export const ItineraryTable = ({ itinerary: propItinerary, city = "Tokyo", onEdi
     }
   };
 
+  const handleExportPDF = async () => {
+    setIsExporting(true);
+    try {
+      const element = document.getElementById('itinerary-content');
+      if (!element) {
+        console.error('Itinerary content element not found');
+        return;
+      }
+
+      // Create canvas from the element
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#ffffff'
+      });
+
+      // Create PDF
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      
+      const imgWidth = 210; // A4 width in mm
+      const pageHeight = 295; // A4 height in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+      let position = 0;
+
+      // Add first page
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+
+      // Add additional pages if needed
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+
+      // Save the PDF
+      pdf.save(`${city}-itinerary.pdf`);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+    } finally {
+      setIsExporting(false);
+    }
+  };
   return (
-    <Card className="w-full bg-card border-border shadow-medium">
+    <Card className="w-full bg-card border-border shadow-medium" id="itinerary-content">
       <CardHeader className="border-b border-border p-4 sm:p-6">
         <div className="flex items-center justify-between">
           <div>
@@ -287,10 +334,12 @@ export const ItineraryTable = ({ itinerary: propItinerary, city = "Tokyo", onEdi
           <Button 
             variant="default" 
             size="sm"
+            onClick={handleExportPDF}
+            disabled={isExporting}
             className="bg-travel-blue hover:bg-travel-blue-dark text-white gap-1 text-xs sm:text-sm w-full sm:w-auto"
           >
             <FileText className="w-4 h-4" />
-            {t('itinerary.exportPdf')}
+            {isExporting ? t('common.loading') : t('itinerary.exportPdf')}
           </Button>
         </div>
       </div>
