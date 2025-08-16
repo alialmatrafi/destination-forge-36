@@ -33,6 +33,7 @@ export const ItineraryTable = ({ itinerary: propItinerary, city = "Tokyo", onEdi
   const [feedback, setFeedback] = useState<"up" | "down" | null>(null);
   const [editingItem, setEditingItem] = useState<{dayIndex: number, itemIndex: number} | null>(null);
   const [localItinerary, setLocalItinerary] = useState<DayItinerary[]>([]);
+  const [isExporting, setIsExporting] = useState(false);
   const { t } = useTranslation();
 
   const defaultItinerary: DayItinerary[] = [
