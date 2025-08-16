@@ -1,5 +1,6 @@
 import { supabase, hasValidSupabaseConfig, Conversation, Message, Itinerary, GuestSession } from '@/lib/supabase';
 
+const useLocalStorage = !hasValidSupabaseConfig;
 
 const localStorageService = {
   getConversations(): Conversation[] {
