@@ -107,7 +107,12 @@ export const MobileSidebar = ({
                 <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
                   <MessageSquare className="w-4 h-4 text-white" />
                 </div>
-                <h1 className="font-semibold text-foreground">{t('sidebar.title')}</h1>
+                <div className="flex items-center gap-2">
+                  <h1 className="font-semibold text-foreground">{t('sidebar.title')}</h1>
+                  <span className="px-2 py-0.5 text-xs font-medium bg-orange-100 text-orange-700 rounded-full border border-orange-200">
+                    Beta
+                  </span>
+                </div>
               </div>
               <div className="flex gap-1">
                 <LanguageSelector />
