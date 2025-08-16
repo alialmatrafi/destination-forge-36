@@ -63,6 +63,36 @@
       "shopping": "shopping"
     }
   },
+  "auth": {
+    "welcome": "Welcome to TravelAI",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "signOut": "Sign Out",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "fullName": "Full Name",
+    "signingIn": "Signing in...",
+    "signingUp": "Signing up...",
+    "signInSuccess": "Successfully signed in",
+    "signUpSuccess": "Successfully signed up",
+    "signInError": "Error signing in",
+    "signUpError": "Error signing up",
+    "passwordMismatch": "Passwords do not match"
+  },
+  "errors": {
+    "loadConversations": "Error loading conversations",
+    "loadMessages": "Error loading messages",
+    "sendMessage": "Error sending message",
+    "updateItinerary": "Error updating itinerary"
+  },
+  "success": {
+    "itineraryUpdated": "Itinerary updated successfully"
+  },
+  "common": {
+    "loading": "Loading...",
+    "thinking": "Thinking..."
+  },
   "languages": {
     "en": "English",
     "ar": "العربية",

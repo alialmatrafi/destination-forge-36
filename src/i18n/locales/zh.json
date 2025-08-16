@@ -63,6 +63,36 @@
       "shopping": "购物"
     }
   },
+  "auth": {
+    "welcome": "欢迎使用TravelAI",
+    "signIn": "登录",
+    "signUp": "注册",
+    "signOut": "退出",
+    "email": "邮箱",
+    "password": "密码",
+    "confirmPassword": "确认密码",
+    "fullName": "全名",
+    "signingIn": "登录中...",
+    "signingUp": "注册中...",
+    "signInSuccess": "登录成功",
+    "signUpSuccess": "注册成功",
+    "signInError": "登录错误",
+    "signUpError": "注册错误",
+    "passwordMismatch": "密码不匹配"
+  },
+  "errors": {
+    "loadConversations": "加载对话错误",
+    "loadMessages": "加载消息错误",
+    "sendMessage": "发送消息错误",
+    "updateItinerary": "更新行程错误"
+  },
+  "success": {
+    "itineraryUpdated": "行程更新成功"
+  },
+  "common": {
+    "loading": "加载中...",
+    "thinking": "思考中..."
+  },
   "languages": {
     "en": "English",
     "ar": "العربية",

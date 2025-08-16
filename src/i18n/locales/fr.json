@@ -63,6 +63,36 @@
       "shopping": "shopping"
     }
   },
+  "auth": {
+    "welcome": "Bienvenue sur TravelAI",
+    "signIn": "Se Connecter",
+    "signUp": "S'inscrire",
+    "signOut": "Se Déconnecter",
+    "email": "Email",
+    "password": "Mot de Passe",
+    "confirmPassword": "Confirmer le Mot de Passe",
+    "fullName": "Nom Complet",
+    "signingIn": "Connexion...",
+    "signingUp": "Inscription...",
+    "signInSuccess": "Connexion réussie",
+    "signUpSuccess": "Inscription réussie",
+    "signInError": "Erreur de connexion",
+    "signUpError": "Erreur d'inscription",
+    "passwordMismatch": "Les mots de passe ne correspondent pas"
+  },
+  "errors": {
+    "loadConversations": "Erreur de chargement des conversations",
+    "loadMessages": "Erreur de chargement des messages",
+    "sendMessage": "Erreur d'envoi du message",
+    "updateItinerary": "Erreur de mise à jour de l'itinéraire"
+  },
+  "success": {
+    "itineraryUpdated": "Itinéraire mis à jour avec succès"
+  },
+  "common": {
+    "loading": "Chargement...",
+    "thinking": "Réflexion..."
+  },
   "languages": {
     "en": "English",
     "ar": "العربية",

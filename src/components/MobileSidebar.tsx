@@ -1,9 +1,12 @@
 import { X, Plus, Search, MessageSquare } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { User } from "@supabase/supabase-js";
+import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { LanguageSelector } from "./LanguageSelector";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface Conversation {
   id: string;
@@ -18,6 +21,8 @@ interface MobileSidebarProps {
   onNewConversation: () => void;
   isOpen: boolean;
   onClose: () => void;
+  user: User | null;
+  onAuthClick: () => void;
 }
 
 export const MobileSidebar = ({
@@ -27,8 +32,11 @@ export const MobileSidebar = ({
   onNewConversation,
   isOpen,
   onClose,
+  user,
+  onAuthClick,
 }: MobileSidebarProps) => {
   const { t } = useTranslation();
+  const { signOut } = useAuth();
 
   const handleConversationSelect = (id: string) => {
     onConversationSelect(id);
@@ -37,6 +45,11 @@ export const MobileSidebar = ({
 
   const handleNewConversation = () => {
     onNewConversation();
+    onClose();
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
     onClose();
   };
 
@@ -134,15 +147,47 @@ export const MobileSidebar = ({
 
           {/* User Section */}
           <div className="p-4 border-t border-sidebar-border">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-gradient-primary rounded-full flex items-center justify-center">
-                <span className="text-white text-sm font-medium">G</span>
+            {user ? (
+              <div className="flex items-center gap-3">
+                <Avatar className="w-8 h-8">
+                  <AvatarImage src={user.user_metadata?.avatar_url} />
+                  <AvatarFallback className="bg-gradient-primary text-white">
+                    {user.user_metadata?.full_name?.[0] || user.email?.[0]?.toUpperCase() || 'U'}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm font-medium text-foreground truncate">
+                    {user.user_metadata?.full_name || t('sidebar.user')}
+                  </div>
+                  <div className="text-xs text-muted-foreground truncate">
+                    {user.email}
+                  </div>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleSignOut}
+                  className="text-xs"
+                >
+                  {t('auth.signOut')}
+                </Button>
               </div>
-              <div className="flex-1 min-w-0">
-                <div className="text-sm font-medium text-foreground">{t('sidebar.guestUser')}</div>
-                <div className="text-xs text-muted-foreground">{t('sidebar.signInToSave')}</div>
+            ) : (
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-gradient-primary rounded-full flex items-center justify-center">
+                  <span className="text-white text-sm font-medium">G</span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm font-medium text-foreground">{t('sidebar.guestUser')}</div>
+                  <button 
+                    onClick={onAuthClick}
+                    className="text-xs text-travel-blue hover:underline"
+                  >
+                    {t('sidebar.signInToSave')}
+                  </button>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>

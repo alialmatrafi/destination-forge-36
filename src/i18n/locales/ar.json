@@ -63,6 +63,36 @@
       "shopping": "تسوق"
     }
   },
+  "auth": {
+    "welcome": "مرحباً بك في TravelAI",
+    "signIn": "تسجيل الدخول",
+    "signUp": "إنشاء حساب",
+    "signOut": "تسجيل الخروج",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "fullName": "الاسم الكامل",
+    "signingIn": "جاري تسجيل الدخول...",
+    "signingUp": "جاري إنشاء الحساب...",
+    "signInSuccess": "تم تسجيل الدخول بنجاح",
+    "signUpSuccess": "تم إنشاء الحساب بنجاح",
+    "signInError": "خطأ في تسجيل الدخول",
+    "signUpError": "خطأ في إنشاء الحساب",
+    "passwordMismatch": "كلمات المرور غير متطابقة"
+  },
+  "errors": {
+    "loadConversations": "خطأ في تحميل المحادثات",
+    "loadMessages": "خطأ في تحميل الرسائل",
+    "sendMessage": "خطأ في إرسال الرسالة",
+    "updateItinerary": "خطأ في تحديث الجدول"
+  },
+  "success": {
+    "itineraryUpdated": "تم تحديث الجدول بنجاح"
+  },
+  "common": {
+    "loading": "جاري التحميل...",
+    "thinking": "جاري التفكير..."
+  },
   "languages": {
     "en": "English",
     "ar": "العربية",

@@ -18,9 +18,11 @@ interface ChatAreaProps {
   onSendMessage: (content: string) => void;
   isWelcomeMode: boolean;
   onMenuClick?: () => void;
+  onEditItinerary?: (messageId: string, itinerary: any[]) => void;
+  loading?: boolean;
 }
 
-export const ChatArea = ({ messages, onSendMessage, isWelcomeMode, onMenuClick }: ChatAreaProps) => {
+export const ChatArea = ({ messages, onSendMessage, isWelcomeMode, onMenuClick, onEditItinerary, loading }: ChatAreaProps) => {
   const [input, setInput] = useState("");
   const { t } = useTranslation();
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -84,16 +86,24 @@ export const ChatArea = ({ messages, onSendMessage, isWelcomeMode, onMenuClick }
             <MessageBubble 
               key={message.id} 
               message={message}
-              onEditItinerary={(itinerary) => {
-                // Update the message with edited itinerary
-                setMessages(prev => prev.map(msg => 
-                  msg.id === message.id 
-                    ? { ...msg, itinerary }
-                    : msg
-                ));
-              }}
+              onEditItinerary={onEditItinerary ? (itinerary) => onEditItinerary(message.id, itinerary) : undefined}
             />
           ))}
+          {loading && (
+            <div className="flex justify-start">
+              <div className="flex gap-3">
+                <div className="w-8 h-8 bg-gradient-primary rounded-full flex items-center justify-center">
+                  <MessageSquare className="w-4 h-4 text-white" />
+                </div>
+                <div className="bg-chat-assistant rounded-2xl px-4 py-3 shadow-soft">
+                  <div className="flex items-center gap-2">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-travel-blue"></div>
+                    <span className="text-sm text-muted-foreground">{t('chat.thinking')}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
           <div ref={messagesEndRef} />
         </div>
       </div>
@@ -121,7 +131,7 @@ export const ChatArea = ({ messages, onSendMessage, isWelcomeMode, onMenuClick }
             </div>
             <Button
               onClick={handleSend}
-              disabled={!input.trim()}
+              disabled={!input.trim() || loading}
               className="bg-travel-blue hover:bg-travel-blue-dark text-white px-3 sm:px-4 py-2 sm:py-3 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
           <Send className="w-4 h-4" />

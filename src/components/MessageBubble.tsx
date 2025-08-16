@@ -4,11 +4,14 @@ import { ItineraryTable } from "./ItineraryTable";
 
 interface Message {
   id: string;
-  type: "user" | "assistant";
+  role: "user" | "assistant";
   content: string;
-  timestamp: Date;
-  itinerary?: any[];
-  city?: string;
+  created_at: string;
+  metadata?: {
+    itinerary?: any[];
+    city?: string;
+    country?: string;
+  };
 }
 
 interface MessageBubbleProps {
@@ -17,10 +20,10 @@ interface MessageBubbleProps {
 }
 
 export const MessageBubble = ({ message, onEditItinerary }: MessageBubbleProps) => {
-  const isUser = message.type === "user";
+  const isUser = message.role === "user";
   
   // Check if the message has itinerary data
-  const hasItinerary = message.itinerary && !isUser;
+  const hasItinerary = message.metadata?.itinerary && !isUser;
 
   return (
     <div className={`flex gap-2 sm:gap-3 ${isUser ? "justify-end" : "justify-start"}`}>
@@ -46,15 +49,15 @@ export const MessageBubble = ({ message, onEditItinerary }: MessageBubbleProps) 
         {hasItinerary && (
           <div className="mt-3 sm:mt-4">
             <ItineraryTable 
-              itinerary={message.itinerary} 
-              city={message.city}
+              itinerary={message.metadata.itinerary} 
+              city={message.metadata.city}
               onEdit={onEditItinerary}
             />
           </div>
         )}
         
         <div className={`text-xs text-muted-foreground mt-1 px-1 ${isUser ? "text-right" : ""}`}>
-          {formatDistanceToNow(message.timestamp, { addSuffix: true })}
+          {formatDistanceToNow(new Date(message.created_at), { addSuffix: true })}
         </div>
       </div>
 

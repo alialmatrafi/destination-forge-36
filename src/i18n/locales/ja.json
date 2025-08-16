@@ -63,6 +63,36 @@
       "shopping": "ショッピング"
     }
   },
+  "auth": {
+    "welcome": "TravelAIへようこそ",
+    "signIn": "サインイン",
+    "signUp": "サインアップ",
+    "signOut": "サインアウト",
+    "email": "メール",
+    "password": "パスワード",
+    "confirmPassword": "パスワード確認",
+    "fullName": "フルネーム",
+    "signingIn": "サインイン中...",
+    "signingUp": "サインアップ中...",
+    "signInSuccess": "サインイン成功",
+    "signUpSuccess": "サインアップ成功",
+    "signInError": "サインインエラー",
+    "signUpError": "サインアップエラー",
+    "passwordMismatch": "パスワードが一致しません"
+  },
+  "errors": {
+    "loadConversations": "会話の読み込みエラー",
+    "loadMessages": "メッセージの読み込みエラー",
+    "sendMessage": "メッセージ送信エラー",
+    "updateItinerary": "旅程更新エラー"
+  },
+  "success": {
+    "itineraryUpdated": "旅程が正常に更新されました"
+  },
+  "common": {
+    "loading": "読み込み中...",
+    "thinking": "考え中..."
+  },
   "languages": {
     "en": "English",
     "ar": "العربية",
