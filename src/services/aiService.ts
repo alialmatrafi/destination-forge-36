@@ -67,9 +67,10 @@ const SYSTEM_PROMPT = `أنت مساعد سفر ذكي ومتخصص باللغة
 const extractItineraryFromResponse = (response: string): { content: string; itinerary?: any[]; city?: string; country?: string } => {
   try {
     // Try to find JSON in the response
-    const jsonMatch = response.match(/\{[\s\S]*\}/);
+    const jsonMatch = response.match(/```json\s*(\{[\s\S]*?\})\s*```/) || response.match(/(\{[\s\S]*?\})/);
     if (jsonMatch) {
-      const parsed = JSON.parse(jsonMatch[0]);
+      const jsonString = jsonMatch[1] || jsonMatch[0];
+      const parsed = JSON.parse(jsonString);
       if (parsed.itinerary) {
         // Sanitize cost values to ensure they are numeric
         parsed.itinerary = parsed.itinerary.map((day: any) => ({
@@ -80,15 +81,37 @@ const extractItineraryFromResponse = (response: string): { content: string; itin
                   (typeof item.cost === 'string' ? parseFloat(item.cost) || 0 : 0)
           })) || []
         }));
-        return parsed;
+        return {
+          content: parsed.content || response.replace(/```json[\s\S]*?```/g, '').trim(),
+          itinerary: parsed.itinerary,
+          city: parsed.city,
+          country: parsed.country
+        };
       }
     }
   } catch (error) {
     console.log('Could not parse JSON from response, using text only');
   }
 
+  // Clean the response from any JSON code blocks or unwanted formatting
+  let cleanContent = response
+    .replace(/```json[\s\S]*?```/g, '') // Remove JSON code blocks
+    .replace(/```[\s\S]*?```/g, '') // Remove any other code blocks
+    .replace(/\{[\s\S]*?\}/g, '') // Remove any remaining JSON objects
+    .replace(/^\s*[\{\[][\s\S]*?[\}\]]\s*$/gm, '') // Remove standalone JSON lines
+    .replace(/\n\s*\n\s*\n/g, '\n\n') // Clean up multiple line breaks
+    .trim();
+
+  // If content is too short after cleaning, use original but clean it better
+  if (cleanContent.length < 50) {
+    cleanContent = response
+      .replace(/```json[\s\S]*?```/g, '')
+      .replace(/```[\s\S]*?```/g, '')
+      .trim();
+  }
+
   // If no structured data found, try to extract city/country from text
-  const cityCountryMatch = response.match(/(.*?)\s*[،,]\s*(.*?)(?:\s|$)/);
+  const cityCountryMatch = cleanContent.match(/(.*?)\s*[،,]\s*(.*?)(?:\s|$)/);
   let city = '';
   let country = '';
 
@@ -117,7 +140,7 @@ const extractItineraryFromResponse = (response: string): { content: string; itin
   };
 
   for (const [pattern, info] of Object.entries(cityPatterns)) {
-    if (response.toLowerCase().includes(pattern)) {
+    if (cleanContent.toLowerCase().includes(pattern)) {
       city = info.city;
       country = info.country;
       break;
@@ -125,7 +148,7 @@ const extractItineraryFromResponse = (response: string): { content: string; itin
   }
 
   return {
-    content: response,
+    content: cleanContent,
     city: city || undefined,
     country: country || undefined
   };
