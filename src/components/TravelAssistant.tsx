@@ -279,7 +279,12 @@ export const TravelAssistant = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                   </svg>
                 </button>
-                <h1 className="text-lg font-semibold text-foreground">TravelAI</h1>
+                <div className="flex items-center gap-2">
+                  <h1 className="text-lg font-semibold text-foreground">TravelAI</h1>
+                  <span className="px-2 py-0.5 text-xs font-medium bg-orange-100 text-orange-700 rounded-full border border-orange-200">
+                    Beta
+                  </span>
+                </div>
                 <div className="w-10" />
               </div>
             )}
@@ -314,7 +319,12 @@ export const TravelAssistant = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                   </svg>
                 </button>
-                <h1 className="text-lg font-semibold text-foreground">TravelAI</h1>
+                <div className="flex items-center gap-2">
+                  <h1 className="text-lg font-semibold text-foreground">TravelAI</h1>
+                  <span className="px-2 py-0.5 text-xs font-medium bg-orange-100 text-orange-700 rounded-full border border-orange-200">
+                    Beta
+                  </span>
+                </div>
                 <div className="w-10" />
               </div>
             )}
