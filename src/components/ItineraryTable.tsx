@@ -264,7 +264,6 @@ export const ItineraryTable = ({ itinerary: propItinerary, city = "Tokyo", onEdi
                         <Badge className={`${getTypeColor(item.type)} text-xs`}>
                           <span className="flex items-center gap-1">
                             {getTypeIcon(item.type)}
-                            {t(`voice.types.${item.type}`)}
                           </span>
                         </Badge>
                       </div>
