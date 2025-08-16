@@ -49,23 +49,23 @@ export const TripSuggestions = ({ onSelectSuggestion }: TripSuggestionsProps) =>
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 max-w-2xl mx-auto">
       {suggestions.map((suggestion) => (
         <Card
           key={suggestion.id}
-          className="cursor-pointer hover:shadow-medium transition-all duration-300 hover:scale-105 border-border bg-card"
+          className="cursor-pointer hover:shadow-medium transition-all duration-300 hover:scale-105 border-border bg-card active:scale-95"
           onClick={() => onSelectSuggestion(suggestion.prompt)}
         >
-          <CardContent className="p-4">
-            <div className="flex items-start gap-3">
-              <div className="p-2 bg-accent rounded-lg">
+          <CardContent className="p-3 sm:p-4">
+            <div className="flex items-start gap-2 sm:gap-3">
+              <div className="p-1.5 sm:p-2 bg-accent rounded-lg flex-shrink-0">
                 {suggestion.icon}
               </div>
               <div className="flex-1">
-                <h3 className="font-medium text-foreground mb-1">
+                <h3 className="font-medium text-foreground mb-1 text-sm sm:text-base">
                   {suggestion.title}
                 </h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                   {suggestion.description}
                 </p>
               </div>

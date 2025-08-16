@@ -59,6 +59,56 @@
   right: 0.75rem;
 }
 
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  /* Improve touch targets */
+  button, .cursor-pointer {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Better text sizing for mobile */
+  .text-xs {
+    font-size: 0.75rem;
+  }
+  
+  .text-sm {
+    font-size: 0.875rem;
+  }
+  
+  /* Prevent horizontal scroll */
+  body {
+    overflow-x: hidden;
+  }
+  
+  /* Better spacing for mobile */
+  .space-y-6 > * + * {
+    margin-top: 1rem;
+  }
+  
+  /* Improve form inputs on mobile */
+  input, textarea {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Better focus states for accessibility */
+@media (prefers-reduced-motion: no-preference) {
+  * {
+    scroll-behavior: smooth;
+  }
+}
+
 /* Travel AI Assistant Design System */
 
 @layer base {

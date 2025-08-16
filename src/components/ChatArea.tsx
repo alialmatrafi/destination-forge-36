@@ -16,9 +16,10 @@ interface ChatAreaProps {
   messages: Message[];
   onSendMessage: (content: string) => void;
   isWelcomeMode: boolean;
+  onMenuClick?: () => void;
 }
 
-export const ChatArea = ({ messages, onSendMessage, isWelcomeMode }: ChatAreaProps) => {
+export const ChatArea = ({ messages, onSendMessage, isWelcomeMode, onMenuClick }: ChatAreaProps) => {
   const [input, setInput] = useState("");
   const { t } = useTranslation();
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -61,8 +62,8 @@ export const ChatArea = ({ messages, onSendMessage, isWelcomeMode }: ChatAreaPro
   return (
     <div className="flex flex-col h-full">
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-6">
-        <div className="max-w-4xl mx-auto space-y-6">
+      <div className="flex-1 overflow-y-auto p-4 sm:p-6">
+        <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
           {messages.map((message) => (
             <MessageBubble key={message.id} message={message} />
           ))}
@@ -71,7 +72,7 @@ export const ChatArea = ({ messages, onSendMessage, isWelcomeMode }: ChatAreaPro
       </div>
 
       {/* Input Area */}
-      <div className="border-t border-border bg-background p-4">
+      <div className="border-t border-border bg-background p-3 sm:p-4">
         <div className="max-w-4xl mx-auto">
           <div className="flex gap-3 items-end">
             <div className="flex-1 relative">
@@ -81,7 +82,7 @@ export const ChatArea = ({ messages, onSendMessage, isWelcomeMode }: ChatAreaPro
                 onChange={handleInputChange}
                 onKeyPress={handleKeyPress}
                 placeholder={isWelcomeMode ? t('chat.inputPlaceholder') : t('chat.inputPlaceholderChat')}
-                className="min-h-[48px] max-h-[200px] resize-none pr-12 bg-card border-input focus:ring-travel-blue"
+                className="min-h-[44px] sm:min-h-[48px] max-h-[150px] sm:max-h-[200px] resize-none pr-12 bg-card border-input focus:ring-travel-blue text-sm sm:text-base"
                 rows={1}
               />
               <Button
@@ -95,7 +96,7 @@ export const ChatArea = ({ messages, onSendMessage, isWelcomeMode }: ChatAreaPro
             <Button
               onClick={handleSend}
               disabled={!input.trim()}
-              className="bg-travel-blue hover:bg-travel-blue-dark text-white px-4 py-3 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-travel-blue hover:bg-travel-blue-dark text-white px-3 sm:px-4 py-2 sm:py-3 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
           <Send className="w-4 h-4" />
           <span className="sr-only">{t('chat.sendMessage')}</span>

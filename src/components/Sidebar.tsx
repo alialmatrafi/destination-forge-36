@@ -27,7 +27,7 @@ export const Sidebar = ({
   const { t } = useTranslation();
 
   return (
-    <div className="w-64 bg-sidebar border-r border-sidebar-border flex flex-col h-full">
+    <div className="hidden md:flex w-64 bg-sidebar border-r border-sidebar-border flex-col h-full">
       {/* Header */}
       <div className="p-4 border-b border-sidebar-border">
         <div className="flex items-center justify-between mb-4">
