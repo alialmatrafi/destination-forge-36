@@ -1,18 +1,7 @@
 import { formatDistanceToNow } from "date-fns";
 import { MessageSquare, User } from "lucide-react";
+import { Message } from "@/lib/supabase";
 import { ItineraryTable } from "./ItineraryTable";
-
-interface Message {
-  id: string;
-  role: "user" | "assistant";
-  content: string;
-  created_at: string;
-  metadata?: {
-    itinerary?: any[];
-    city?: string;
-    country?: string;
-  };
-}
 
 interface MessageBubbleProps {
   message: Message;

@@ -1,17 +1,11 @@
 import { useState, useRef, useEffect } from "react";
 import { Send, MessageSquare } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { Message } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { MessageBubble } from "./MessageBubble";
 import { VoiceRecordingButton } from "./VoiceRecordingButton";
-
-interface Message {
-  id: string;
-  type: "user" | "assistant";
-  content: string;
-  timestamp: Date;
-}
 
 interface ChatAreaProps {
   messages: Message[];
