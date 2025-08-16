@@ -14,7 +14,7 @@ const genAI = apiKey ? new GoogleGenerativeAI(apiKey) : null;
 const SYSTEM_PROMPT = systemPrompt;
 
 // Function to extract structured data from AI response
-const extractTravelInfo = (message: string): { destination?: string; days?: number; interests?: string[] } => {
+const extractTravelInfo = (message: string): { destination?: string; days?: number; interests?: string[]; travelType?: string; budget?: string; groupSize?: number } => {
   const text = message.toLowerCase();
   
   // Extract destination
@@ -96,6 +96,55 @@ const extractTravelInfo = (message: string): { destination?: string; days?: numb
   }
   
   return { destination, days: days || 3, interests };
+  
+  // Extract travel type
+  let travelType = 'general';
+  const travelTypes = {
+    'family': ['عائلية', 'أطفال', 'عائلة', 'family', 'kids', 'children'],
+    'romantic': ['رومانسية', 'شهر عسل', 'romantic', 'honeymoon', 'couple'],
+    'adventure': ['مغامرة', 'رياضة', 'adventure', 'hiking', 'sports'],
+    'business': ['عمل', 'مؤتمر', 'business', 'conference', 'work'],
+    'beach': ['شاطئ', 'بحر', 'beach', 'sea', 'resort'],
+    'cultural': ['ثقافة', 'تاريخ', 'متاحف', 'culture', 'history', 'museums']
+  };
+  
+  for (const [type, keywords] of Object.entries(travelTypes)) {
+    if (keywords.some(keyword => text.includes(keyword))) {
+      travelType = type;
+      break;
+    }
+  }
+  
+  // Extract budget hints
+  let budget = 'medium';
+  const budgetKeywords = {
+    'low': ['رخيص', 'اقتصادي', 'محدود', 'budget', 'cheap', 'affordable'],
+    'high': ['فاخر', 'راقي', 'luxury', 'premium', 'expensive'],
+    'medium': ['متوسط', 'معقول', 'moderate', 'reasonable']
+  };
+  
+  for (const [level, keywords] of Object.entries(budgetKeywords)) {
+    if (keywords.some(keyword => text.includes(keyword))) {
+      budget = level;
+      break;
+    }
+  }
+  
+  // Extract group size
+  let groupSize = 2;
+  const groupMatch = text.match(/(\d+)\s*(?:أشخاص|شخص|people|person|adults?|بالغ)/);
+  if (groupMatch) {
+    groupSize = parseInt(groupMatch[1]) || 2;
+  }
+  
+  return { 
+    destination, 
+    days: days || 3, 
+    interests,
+    travelType,
+    budget,
+    groupSize
+  };
 };
 
 const extractItineraryFromResponse = (response: string): { content: string; itinerary?: any[]; city?: string; country?: string } => {
@@ -315,82 +364,109 @@ export const generateAIResponse = async ({ message, conversationHistory = [] }: 
     }
 
     // Check if this is a travel planning request
-    const isTravelRequest = message.includes('رحلة') || message.includes('سفر') || message.includes('خطة') || 
-                           message.includes('جدول') || message.includes('يوم') || message.includes('زيارة') ||
-                           message.includes('عطلة') || message.includes('إجازة') || message.includes('شاطئ') ||
-                           message.includes('عائلية') || message.includes('أشخاص') || message.includes('أطفال') ||
-                           message.includes('إقامة') || message.includes('فندق') || message.includes('منتجع') ||
-                           message.includes('أنشطة') || message.includes('ترفيه') || message.includes('استجمام') ||
-                           message.toLowerCase().includes('trip') || message.toLowerCase().includes('travel') ||
-                           message.toLowerCase().includes('plan') || message.toLowerCase().includes('itinerary') ||
-                           message.toLowerCase().includes('vacation') || message.toLowerCase().includes('holiday') ||
-                           message.toLowerCase().includes('beach') || message.toLowerCase().includes('family') ||
-                           message.toLowerCase().includes('resort') || message.toLowerCase().includes('hotel') ||
-                           message.toLowerCase().includes('activities') || message.toLowerCase().includes('kids');
+    const travelKeywords = [
+      // Arabic keywords
+      'رحلة', 'سفر', 'خطة', 'جدول', 'يوم', 'زيارة', 'عطلة', 'إجازة', 'شاطئ',
+      'عائلية', 'أشخاص', 'أطفال', 'إقامة', 'فندق', 'منتجع', 'أنشطة', 'ترفيه',
+      'استجمام', 'مدينة', 'بلد', 'دولة', 'مكان', 'وجهة', 'سياحة', 'طيران',
+      'حجز', 'تذكرة', 'باص', 'قطار', 'سيارة', 'مطار', 'طعام', 'مطعم', 'تسوق',
+      'أسواق', 'متحف', 'معلم', 'أثري', 'تاريخي', 'ثقافي', 'طبيعة', 'حديقة',
+      'جبل', 'وادي', 'صحراء', 'بحيرة', 'نهر', 'شلال', 'كهف', 'قلعة', 'قصر',
+      'مسجد', 'كنيسة', 'معبد', 'مهرجان', 'حفل', 'عرض', 'رياضة', 'غوص',
+      'سباحة', 'تزلج', 'تسلق', 'مشي', 'جري', 'دراجة', 'خيمة', 'تخييم',
+      'استكشاف', 'مغامرة', 'استرخاء', 'راحة', 'علاج', 'سبا', 'تدليك',
+      
+      // English keywords
+      'trip', 'travel', 'plan', 'itinerary', 'vacation', 'holiday', 'beach',
+      'family', 'resort', 'hotel', 'activities', 'kids', 'city', 'country',
+      'destination', 'tourism', 'flight', 'booking', 'ticket', 'bus', 'train',
+      'car', 'airport', 'food', 'restaurant', 'shopping', 'market', 'museum',
+      'landmark', 'historical', 'cultural', 'nature', 'park', 'mountain',
+      'valley', 'desert', 'lake', 'river', 'waterfall', 'cave', 'castle',
+      'palace', 'mosque', 'church', 'temple', 'festival', 'concert', 'show',
+      'sport', 'diving', 'swimming', 'skiing', 'climbing', 'hiking', 'running',
+      'cycling', 'camping', 'exploration', 'adventure', 'relaxation', 'spa'
+    ];
+    
+    const isTravelRequest = travelKeywords.some(keyword => 
+      message.toLowerCase().includes(keyword.toLowerCase())
+    );
 
     if (isTravelRequest) {
       // For travel requests, generate structured itinerary
       const travelInfo = extractTravelInfo(message);
-      const destination = travelInfo.destination || 'الوجهة المطلوبة';
+      const destination = travelInfo.destination || 'وجهة مقترحة';
       const days = travelInfo.days || 3;
-      const interests = travelInfo.interests.length > 0 ? travelInfo.interests.join('، ') : 'الثقافة والطعام';
+      const interests = travelInfo.interests.length > 0 ? travelInfo.interests.join('، ') : 'متنوعة';
+      const travelType = travelInfo.travelType || 'general';
+      const budget = travelInfo.budget || 'medium';
+      const groupSize = travelInfo.groupSize || 2;
       
-      const itineraryPrompt = `${systemPrompt}${conversationContext}
+      const itineraryPrompt = `${SYSTEM_PROMPT}${conversationContext}
 
 طلب المستخدم: ${message}
 
 معلومات مستخرجة:
 - الوجهة: ${destination}
 - عدد الأيام: ${days}
+- نوع الرحلة: ${travelType}
 - الاهتمامات: ${interests}
+- الميزانية: ${budget}
+- عدد الأشخاص: ${groupSize}
 
-${!travelInfo.destination ? `
-ملاحظة: المستخدم لم يحدد وجهة معينة. اقترح عليه 3 وجهات مناسبة لطلبه واختر واحدة منها لإنشاء الجدول.
-` : ''}
+تعليمات مهمة:
+1. يجب إنشاء جدول رحلة مفصل لـ ${days} أيام بتنسيق JSON
+2. إذا لم تكن الوجهة محددة، اقترح وجهة مناسبة لنوع الرحلة
+3. اجعل الأنشطة مناسبة لـ ${travelType === 'family' ? 'العائلات والأطفال' : travelType === 'romantic' ? 'الأزواج' : travelType === 'adventure' ? 'المغامرين' : travelType === 'business' ? 'رجال الأعمال' : travelType === 'beach' ? 'عشاق الشواطئ' : travelType === 'cultural' ? 'محبي الثقافة' : 'جميع الأعمار'}
+4. اجعل التكاليف مناسبة للميزانية ${budget === 'low' ? 'المحدودة' : budget === 'high' ? 'المرتفعة' : 'المتوسطة'}
+5. خطط للأنشطة بحيث تناسب ${groupSize} أشخاص
 
-قم بإنشاء رد يتضمن:
-1. نص وصفي مفيد باللغة العربية عن الوجهة والرحلة
-2. جدول رحلة مفصل لـ ${days} أيام ${travelInfo.destination ? `في ${destination}` : 'في الوجهة المقترحة'} بتنسيق JSON
+**يجب أن يكون الرد بهذا التنسيق بالضبط:**
 
-${message.includes('عائلية') || message.includes('أطفال') || message.toLowerCase().includes('family') || message.toLowerCase().includes('kids') ? 
-`تأكد من تضمين أنشطة مناسبة للعائلة والأطفال.` : ''}
+[نص وصفي مفيد باللغة العربية عن الرحلة والوجهة - لا تذكر JSON هنا]
 
-${message.includes('شاطئ') || message.toLowerCase().includes('beach') ? 
-`ركز على الأنشطة الشاطئية والمائية.` : ''}
-
-تنسيق الرد المطلوب:
-
-[نص وصفي للرحلة ${travelInfo.destination ? `إلى ${destination}` : 'مع اقتراح الوجهات المناسبة'} لمدة ${days} أيام باللغة العربية]
-
-\`\`\`json
+\`\`\`json  
 {
-  "content": "وصف مختصر للرحلة ${travelInfo.destination ? `إلى ${destination}` : 'مع الوجهة المقترحة'}",
-  "city": "${travelInfo.destination ? destination : 'الوجهة المقترحة'}",
+  "content": "وصف مختصر للرحلة",
+  "city": "${destination}",
   "country": "اسم البلد بالإنجليزية",
   "itinerary": [
     {
       "day": 1,
       "date": "اليوم الأول",
-      "theme": "موضوع اليوم ${message.includes('عائلية') ? '(مناسب للعائلة)' : ''}",
+      "theme": "موضوع اليوم",
       "items": [
         {
           "time": "9:00 ص - 11:00 ص",
           "activity": "اسم النشاط",
-          "location": "وصف المكان والموقع ${message.includes('عائلية') ? '(مناسب للأطفال)' : ''}",
-          "cost": 25,
-          "type": "${message.includes('شاطئ') ? 'culture' : 'culture'}"
+          "location": "وصف المكان والموقع",
+          "cost": 0,
+          "type": "culture"
+        },
+        {
+          "time": "11:30 ص - 1:00 م",
+          "activity": "نشاط آخر",
+          "location": "مكان آخر",
+          "cost": 15,
+          "type": "food"
         }
       ]
+    },
+    {
+      "day": 2,
+      "date": "اليوم الثاني", 
+      "theme": "موضوع اليوم الثاني",
+      "items": [...]
     }
-    ${days > 1 ? `... (كرر لـ ${days} أيام)` : ''}
   ]
 }
 \`\`\`
 
-يجب أن يحتوي الجدول على ${days} أيام بالضبط.
-ركز على الاهتمامات: ${interests}
-أنواع الأنشطة المتاحة: "culture", "food", "transport", "shopping"
-تأكد من أن التكاليف أرقام صحيحة.`;
+**مهم جداً:**
+- أنشئ ${days} أيام بالضبط في الجدول
+- استخدم أنواع الأنشطة: "culture", "food", "transport", "shopping"  
+- اجعل التكاليف أرقام صحيحة
+- لا تذكر كلمة JSON في النص الوصفي`;
 
       const result = await model.generateContent(itineraryPrompt);
       const response = result.response;
