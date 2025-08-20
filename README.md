@@ -1,20 +1,6 @@
 # 🌍 TravelAI - مساعدك الذكي للسفر
 
-<div align="center">
 
-![TravelAI Logo](https://images.pexels.com/photos/1008155/pexels-photo-1008155.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop)
-
-**خطط لرحلات مثالية بمساعدة الذكاء الاصطناعي**
-
-[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-TravelAI.vip-blue?style=for-the-badge)](https://travelai.vip)
-[![Version](https://img.shields.io/badge/Version-1.0.0_Beta-orange?style=for-the-badge)](#)
-[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](#)
-
-[العربية](#arabic) • [English](#english) • [Español](#español) • [Français](#français) • [Deutsch](#deutsch) • [中文](#chinese) • [日本語](#japanese)
-
-</div>
-
----
 
 ## 🎯 نظرة عامة
 
@@ -324,22 +310,6 @@ npm run preview
 - **لقطات شاشة** مفيدة
 
 ---
-
-## 📚 التوثيق التقني
-
-### **🔗 روابط مفيدة:**
-- [📖 دليل المطور](./docs/developer-guide.md)
-- [🏗️ مخطط المعمارية](./docs/app-architecture.md)
-- [🌐 دليل الترجمة](./docs/translation-guide.md)
-- [🔧 دليل النشر](./docs/deployment-guide.md)
-
-### **🛠️ APIs المستخدمة:**
-- [Google Gemini AI](https://ai.google.dev/)
-- [Supabase](https://supabase.com/)
-- [Web Speech API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API)
-
----
-
 ## 📊 إحصائيات المشروع
 
 <div align="center">
@@ -354,20 +324,6 @@ npm run preview
 | 📱 **دعم الأجهزة** | 100% |
 
 </div>
-
----
-
-## 🎨 لقطات الشاشة
-
-### **🖥️ الشاشة الرئيسية:**
-![الشاشة الرئيسية](https://images.pexels.com/photos/1008155/pexels-photo-1008155.jpeg?auto=compress&cs=tinysrgb&w=800)
-
-### **💬 واجهة الدردشة:**
-![واجهة الدردشة](https://images.pexels.com/photos/1174732/pexels-photo-1174732.jpeg?auto=compress&cs=tinysrgb&w=800)
-
-### **📋 جدول الرحلة:**
-![جدول الرحلة](https://images.pexels.com/photos/1008155/pexels-photo-1008155.jpeg?auto=compress&cs=tinysrgb&w=800)
-
 ---
 
 ## 🔄 دورة التطوير
@@ -386,62 +342,6 @@ npm run preview
 - 🌐 **تكامل مع خدمات خارجية**
 
 ---
-
-## 🏆 الشكر والتقدير
-
-### **💝 شكر خاص لـ:**
-- **Google Gemini AI** - للذكاء الاصطناعي المتقدم
-- **Supabase** - لقاعدة البيانات والمصادقة
-- **Tailwind CSS** - للتصميم الجميل
-- **shadcn/ui** - للمكونات الأنيقة
-- **React Team** - للمكتبة الرائعة
-
-### **🌟 المساهمون:**
-- [اسم المطور الرئيسي] - التطوير والتصميم
-- [المساهمون الآخرون] - الترجمة والاختبار
-
----
-
-## 📞 التواصل والدعم
-
-### **💬 طرق التواصل:**
-- **📧 البريد الإلكتروني:** support@travelai.vip
-- **🐛 الإبلاغ عن المشاكل:** [GitHub Issues](https://github.com/your-username/travelai/issues)
-- **💡 اقتراح ميزات:** [GitHub Discussions](https://github.com/your-username/travelai/discussions)
-
-### **🆘 الدعم الفني:**
-- **📖 الوثائق:** متوفرة في مجلد `/docs`
-- **❓ الأسئلة الشائعة:** [FAQ](./docs/faq.md)
-- **🎥 فيديوهات تعليمية:** قريباً
-
----
-
-## 📄 الترخيص
-
-هذا المشروع مرخص تحت **رخصة MIT** - راجع ملف [LICENSE](LICENSE) للتفاصيل.
-
-```
-MIT License
-
-Copyright (c) 2025 TravelAI
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-```
-
----
-
-## 🎯 الخلاصة
-
-**TravelAI** يمثل مستقبل تخطيط السفر بالذكاء الاصطناعي. مع دعم متعدد اللغات، وتصميم حديث، وميزات متقدمة، يوفر التطبيق تجربة فريدة لتخطيط الرحلات.
-
 <div align="center">
 
 **🌟 جرب التطبيق الآن: [TravelAI.vip](https://travelai.vip) 🌟**
