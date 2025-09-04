@@ -287,7 +287,7 @@ export const ItineraryTable = ({ itinerary: propItinerary, city = "Tokyo", onEdi
                     </div>
                     
                     <div className="flex items-center gap-2 flex-shrink-0">
-                    className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity p-1 h-6 w-6 hover:bg-destructive hover:text-destructive-foreground [dir='rtl']:right-auto [dir='rtl']:left-2"
+                      <div className="flex items-center gap-1 text-sm font-medium text-foreground">
                         <DollarSign className="w-4 h-4" />
                         {item.cost === 0 ? t('itinerary.free') : item.cost}
                       </div>
@@ -327,7 +327,7 @@ export const ItineraryTable = ({ itinerary: propItinerary, city = "Tokyo", onEdi
                       </div>
                     </div>
                   </div>
-              <div className="flex items-center gap-3 [dir='rtl']:flex-row-reverse">
+                </div>
               ))}
               
               {/* Add new item button */}
@@ -335,7 +335,7 @@ export const ItineraryTable = ({ itinerary: propItinerary, city = "Tokyo", onEdi
                 <Button
                   variant="ghost"
                   size="sm"
-              <div className="flex items-center gap-3 [dir='rtl']:flex-row-reverse">
+                  onClick={() => handleAddItem(dayIndex)}
                   className="w-full text-travel-blue hover:bg-travel-blue-light"
                 >
                   + Add Activity
@@ -457,6 +457,7 @@ const EditItemForm = ({ item, onSave }: EditItemFormProps) => {
           <option value="culture">Culture</option>
           <option value="food">Food</option>
           <option value="transport">Transport</option>
+          <option value="shopping">Shopping</option>
         </select>
       </div>
       
