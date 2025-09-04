@@ -44,6 +44,13 @@ export const LanguageSelector = () => {
       // Force re-render by updating a CSS custom property
       document.documentElement.style.setProperty('--language-direction', languageCode === 'ar' ? 'rtl' : 'ltr');
     }, 100);
+        document.documentElement.lang = languageCode;
+        document.body.classList.remove('rtl');
+      }
+      
+      // Force re-render by updating a CSS custom property
+      document.documentElement.style.setProperty('--language-direction', languageCode === 'ar' ? 'rtl' : 'ltr');
+    }, 100);
   };
 
   return (

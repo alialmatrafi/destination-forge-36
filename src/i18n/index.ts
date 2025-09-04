@@ -50,6 +50,19 @@ i18n
       document.documentElement.lang = currentLang;
       document.body.classList.remove('rtl');
     }
+  })
+  .then(() => {
+    // Set initial direction based on detected language
+    const currentLang = i18n.language;
+    if (currentLang === 'ar') {
+      document.documentElement.dir = 'rtl';
+      document.documentElement.lang = 'ar';
+      document.body.classList.add('rtl');
+    } else {
+      document.documentElement.dir = 'ltr';
+      document.documentElement.lang = currentLang;
+      document.body.classList.remove('rtl');
+    }
   });
 
 export default i18n;
