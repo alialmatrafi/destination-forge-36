@@ -73,15 +73,15 @@ export const Sidebar = ({
     setConversationToDelete(null);
   };
   return (
-    <div className="hidden md:flex w-64 bg-sidebar border-r border-sidebar-border flex-col h-full">
+    <div className="hidden md:flex w-64 bg-sidebar border-r border-sidebar-border flex-col h-full [dir='rtl'] &:border-r-0 [dir='rtl'] &:border-l [dir='rtl'] &:border-sidebar-border" dir="inherit">
       {/* Header */}
       <div className="p-4 border-b border-sidebar-border">
         <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 [dir='rtl'] &:flex-row-reverse">
             <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
               <MessageSquare className="w-4 h-4 text-white" />
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 [dir='rtl'] &:flex-row-reverse">
               <h1 className="font-semibold text-foreground">{t('sidebar.title')}</h1>
               <span className="px-2 py-0.5 text-xs font-medium bg-orange-100 text-orange-700 rounded-full border border-orange-200">
                 Beta
@@ -103,10 +103,10 @@ export const Sidebar = ({
         
         {/* Search */}
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground [dir='rtl'] &:left-auto [dir='rtl'] &:right-3" />
           <Input
             placeholder={t('sidebar.searchPlaceholder')}
-            className="pl-9 bg-background border-input"
+            className="pl-9 bg-background border-input [dir='rtl'] &:pl-3 [dir='rtl'] &:pr-9 [dir='rtl'] &:text-right"
           />
         </div>
       </div>

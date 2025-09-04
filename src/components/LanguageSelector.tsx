@@ -30,13 +30,20 @@ export const LanguageSelector = () => {
     setIsOpen(false);
     
     // Update document direction for RTL languages
-    if (languageCode === 'ar') {
-      document.documentElement.dir = 'rtl';
-      document.documentElement.lang = 'ar';
-    } else {
-      document.documentElement.dir = 'ltr';
-      document.documentElement.lang = languageCode;
-    }
+    setTimeout(() => {
+      if (languageCode === 'ar') {
+        document.documentElement.dir = 'rtl';
+        document.documentElement.lang = 'ar';
+        document.body.classList.add('rtl');
+      } else {
+        document.documentElement.dir = 'ltr';
+        document.documentElement.lang = languageCode;
+        document.body.classList.remove('rtl');
+      }
+      
+      // Force re-render by updating a CSS custom property
+      document.documentElement.style.setProperty('--language-direction', languageCode === 'ar' ? 'rtl' : 'ltr');
+    }, 100);
   };
 
   return (

@@ -241,7 +241,7 @@ export const TravelAssistant = () => {
   }
 
   return (
-    <div className="flex h-screen bg-background overflow-hidden">
+    <div className="flex h-screen bg-background overflow-hidden" dir="inherit">
       {isMobile ? (
         <MobileSidebar
           conversations={conversations}
@@ -270,7 +270,7 @@ export const TravelAssistant = () => {
         {showWelcome ? (
           <div className="flex-1 flex flex-col min-h-0">
             {isMobile && (
-              <div className="flex items-center justify-between p-4 border-b border-border bg-background">
+              <div className="flex items-center justify-between p-4 border-b border-border bg-background [dir='rtl'] &:flex-row-reverse">
                 <button
                   onClick={() => setSidebarOpen(true)}
                   className="p-2 hover:bg-accent rounded-lg"
@@ -279,7 +279,7 @@ export const TravelAssistant = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                   </svg>
                 </button>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 [dir='rtl'] &:flex-row-reverse">
                   <h1 className="text-lg font-semibold text-foreground">TravelAI</h1>
                   <span className="px-2 py-0.5 text-xs font-medium bg-orange-100 text-orange-700 rounded-full border border-orange-200">
                     Beta
@@ -289,7 +289,7 @@ export const TravelAssistant = () => {
               </div>
             )}
             <div className="flex-1 flex items-center justify-center">
-              <div className="text-center max-w-2xl mx-auto px-4 sm:px-6">
+              <div className="text-center max-w-2xl mx-auto px-4 sm:px-6 [dir='rtl'] &:text-right">
                 <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-4">
                   {t('chat.welcomeTitle')}
                 </h1>
@@ -310,7 +310,7 @@ export const TravelAssistant = () => {
         ) : (
           <>
             {isMobile && (
-              <div className="flex items-center justify-between p-4 border-b border-border bg-background">
+              <div className="flex items-center justify-between p-4 border-b border-border bg-background [dir='rtl'] &:flex-row-reverse">
                 <button
                   onClick={() => setSidebarOpen(true)}
                   className="p-2 hover:bg-accent rounded-lg"
@@ -319,7 +319,7 @@ export const TravelAssistant = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                   </svg>
                 </button>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 [dir='rtl'] &:flex-row-reverse">
                   <h1 className="text-lg font-semibold text-foreground">TravelAI</h1>
                   <span className="px-2 py-0.5 text-xs font-medium bg-orange-100 text-orange-700 rounded-full border border-orange-200">
                     Beta

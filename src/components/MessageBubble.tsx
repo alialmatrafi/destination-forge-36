@@ -15,22 +15,22 @@ export const MessageBubble = ({ message, onEditItinerary }: MessageBubbleProps) 
   const hasItinerary = message.metadata?.itinerary && !isUser;
 
   return (
-    <div className={`flex gap-2 sm:gap-3 ${isUser ? "justify-end" : "justify-start"}`}>
+    <div className={`flex gap-2 sm:gap-3 ${isUser ? "justify-end" : "justify-start"}`} dir="inherit">
       {!isUser && (
         <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-primary rounded-full flex items-center justify-center flex-shrink-0 mt-1">
           <MessageSquare className="w-4 h-4 text-white" />
         </div>
       )}
       
-      <div className={`max-w-[85%] sm:max-w-2xl ${isUser ? "order-1" : ""}`}>
+      <div className={`max-w-[85%] sm:max-w-2xl ${isUser ? "order-1" : ""}`} dir="inherit">
         <div
           className={`rounded-2xl px-3 sm:px-4 py-2 sm:py-3 shadow-soft ${
             isUser
               ? "bg-chat-user text-white ml-auto"
               : "bg-chat-assistant text-foreground"
-          }`}
+          } [dir='rtl'] &:text-right`}
         >
-          <p className="text-sm sm:text-base leading-relaxed whitespace-pre-wrap">
+          <p className="text-sm sm:text-base leading-relaxed whitespace-pre-wrap [dir='rtl'] &:text-right [dir='rtl'] &:font-medium">
             {message.content}
           </p>
         </div>
@@ -45,7 +45,7 @@ export const MessageBubble = ({ message, onEditItinerary }: MessageBubbleProps) 
           </div>
         )}
         
-        <div className={`text-xs text-muted-foreground mt-1 px-1 ${isUser ? "text-right" : ""}`}>
+        <div className={`text-xs text-muted-foreground mt-1 px-1 ${isUser ? "text-right" : ""} [dir='rtl'] &:text-right`}>
           {formatDistanceToNow(new Date(message.created_at), { addSuffix: true })}
         </div>
       </div>
