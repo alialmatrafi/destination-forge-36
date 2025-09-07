@@ -33,7 +33,6 @@ interface ItineraryTableProps {
 }
 
 export const ItineraryTable = ({ itinerary: propItinerary, city = "Tokyo", onEdit }: ItineraryTableProps) => {
-export const ChatArea = ({ itinerary: propItinerary, city = "Tokyo", onEdit }: ItineraryTableProps) => {
   const [feedback, setFeedback] = useState<"up" | "down" | null>(null);
   const [editingItem, setEditingItem] = useState<{dayIndex: number, itemIndex: number} | null>(null);
   const [localItinerary, setLocalItinerary] = useState<DayItinerary[]>([]);
@@ -458,6 +457,7 @@ const EditItemForm = ({ item, onSave }: EditItemFormProps) => {
           <option value="culture">Culture</option>
           <option value="food">Food</option>
           <option value="transport">Transport</option>
+          <option value="shopping">Shopping</option>
         </select>
       </div>
       
