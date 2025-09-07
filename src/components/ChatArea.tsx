@@ -32,7 +32,7 @@ interface ItineraryTableProps {
   onEdit?: (itinerary: DayItinerary[]) => void;
 }
 
-export const ItineraryTable = ({ itinerary: propItinerary, city = "Tokyo", onEdit }: ItineraryTableProps) => {
+export const ChatArea = ({ itinerary: propItinerary, city = "Tokyo", onEdit }: ItineraryTableProps) => {
   const [feedback, setFeedback] = useState<"up" | "down" | null>(null);
   const [editingItem, setEditingItem] = useState<{dayIndex: number, itemIndex: number} | null>(null);
   const [localItinerary, setLocalItinerary] = useState<DayItinerary[]>([]);
