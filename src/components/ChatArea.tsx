@@ -242,17 +242,17 @@ export const ChatArea = ({
               {messages.map((message) => (
                 <div key={message.id} className="space-y-4">
                   <div
-                    className={`flex ${
+                    className={`chat-message-container ${message.role} ${
                       message.role === 'user' 
-                        ? 'justify-end [dir="rtl"] &:justify-start' 
-                        : 'justify-start [dir="rtl"] &:justify-end'
+                        ? 'justify-end' 
+                        : 'justify-start'
                     }`}
                   >
                     <div
                       className={`max-w-[80%] rounded-lg p-4 ${
                         message.role === 'user'
-                          ? 'bg-primary text-primary-foreground chat-message-user'
-                          : 'bg-muted chat-message-assistant'
+                          ? 'bg-primary text-primary-foreground chat-user-message'
+                          : 'bg-muted chat-assistant-message'
                       }`}
                     >
                       <div className="whitespace-pre-wrap mixed-content">{message.content}</div>

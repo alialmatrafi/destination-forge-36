@@ -130,6 +130,41 @@
   flex-direction: row;
 }
 
+/* Fix chat message alignment for RTL */
+[dir="rtl"] .chat-user-message {
+  margin-left: auto;
+  margin-right: 0;
+  text-align: right;
+}
+
+[dir="rtl"] .chat-assistant-message {
+  margin-right: auto;
+  margin-left: 0;
+  text-align: right;
+}
+
+[dir="rtl"] .justify-end {
+  justify-content: flex-start !important;
+}
+
+[dir="rtl"] .justify-start {
+  justify-content: flex-end !important;
+}
+
+/* Fix flex direction for chat messages */
+[dir="rtl"] .chat-message-container {
+  display: flex;
+  width: 100%;
+}
+
+[dir="rtl"] .chat-message-container.user {
+  justify-content: flex-start;
+}
+
+[dir="rtl"] .chat-message-container.assistant {
+  justify-content: flex-end;
+}
+
 [dir="rtl"] .flex-row {
   flex-direction: row-reverse;
 }
