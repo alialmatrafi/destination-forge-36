@@ -1,5 +1,18 @@
 import { supabase, hasValidSupabaseConfig, Conversation, Message, Itinerary, GuestSession } from '@/lib/supabase';
 
+// Add missing interface definitions
+interface AIRequest {
+  message: string;
+  conversationHistory?: Array<{ role: string; content: string }>;
+}
+
+interface AIResponse {
+  content: string;
+  itinerary?: any[];
+  city?: string;
+  country?: string;
+}
+
 const localStorageService = {
   getConversations(): Conversation[] {
     const stored = localStorage.getItem('travel-conversations');

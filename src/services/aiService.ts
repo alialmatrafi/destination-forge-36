@@ -1,6 +1,19 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import systemPrompt from './system_prompt.txt?raw';
 
+// Add missing interface definitions
+interface AIRequest {
+  message: string;
+  conversationHistory?: Array<{ role: string; content: string }>;
+}
+
+interface AIResponse {
+  content: string;
+  itinerary?: any[];
+  city?: string;
+  country?: string;
+}
+
 // Check if API key is available
 const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
 if (!apiKey) {
