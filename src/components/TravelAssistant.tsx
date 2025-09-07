@@ -343,6 +343,9 @@ export const ItineraryTable = ({ itinerary: propItinerary, city = "Tokyo", onEdi
               </div>
             </div>
           </div>
+          )
+          )
+          }
       </CardContent>
 
       {/* Action Buttons */}
@@ -393,6 +396,9 @@ export const ItineraryTable = ({ itinerary: propItinerary, city = "Tokyo", onEdi
           </Button>
         </div>
       </div>
+    )
+    )
+    }
     </Card>
   );
 };
