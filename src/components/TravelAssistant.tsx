@@ -343,7 +343,6 @@ export const ItineraryTable = ({ itinerary: propItinerary, city = "Tokyo", onEdi
               </div>
             </div>
           </div>
-                  )          )          }
       </CardContent>
 
       {/* Action Buttons */}
@@ -395,9 +394,8 @@ export const ItineraryTable = ({ itinerary: propItinerary, city = "Tokyo", onEdi
         </div>
       </div>
     </Card>
-      );
-    )
-    };
+  );
+};
 
 interface EditItemFormProps {
   item: ItineraryItem;
