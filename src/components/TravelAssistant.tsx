@@ -19,6 +19,15 @@ export const TravelAssistant = () => {
     const isRTL = i18n.language === 'ar';
     document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
     document.documentElement.lang = i18n.language;
+    
+    // Add Arabic font class for better rendering
+    if (isRTL) {
+      document.body.classList.add('arabic-text');
+      document.body.style.fontFamily = "'Cairo', 'Amiri', 'Noto Sans Arabic', 'Segoe UI', 'Tahoma', 'Arial', sans-serif";
+    } else {
+      document.body.classList.remove('arabic-text');
+      document.body.style.fontFamily = "";
+    }
   }, [i18n.language]);
 
   useEffect(() => {
@@ -68,7 +77,12 @@ export const TravelAssistant = () => {
   };
 
   return (
-    <div className="flex h-screen bg-background text-foreground" dir={i18n.language === 'ar' ? 'rtl' : 'ltr'}>
+    <div 
+      className={`flex h-screen bg-background text-foreground ${
+        i18n.language === 'ar' ? 'arabic-text' : ''
+      }`} 
+      dir={i18n.language === 'ar' ? 'rtl' : 'ltr'}
+    >
       {/* Desktop Sidebar */}
       <div className="hidden md:block">
         <Sidebar

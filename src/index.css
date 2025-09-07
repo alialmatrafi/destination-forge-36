@@ -127,13 +127,16 @@
 }
 
 [dir="rtl"] .flex {
-  flex-direction: row-reverse;
+  flex-direction: row;
 }
 
 [dir="rtl"] .flex-row {
   flex-direction: row-reverse;
 }
 
+[dir="rtl"] .flex-row-reverse {
+  flex-direction: row;
+}
 [dir="rtl"] .space-x-1 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-x-reverse: 1;
   margin-right: calc(0.25rem * var(--tw-space-x-reverse));
@@ -199,9 +202,30 @@
 [dir="rtl"] .gap-2,
 [dir="rtl"] .gap-3,
 [dir="rtl"] .gap-4 {
-  flex-direction: row-reverse;
+  /* Keep normal gap behavior */
 }
 
+/* Chat message alignment for RTL */
+[dir="rtl"] .chat-message-user {
+  margin-left: 0;
+  margin-right: auto;
+  text-align: right;
+}
+
+[dir="rtl"] .chat-message-assistant {
+  margin-right: 0;
+  margin-left: auto;
+  text-align: right;
+}
+
+/* Sidebar improvements for RTL */
+[dir="rtl"] .sidebar-content {
+  text-align: right;
+}
+
+[dir="rtl"] .sidebar-item {
+  flex-direction: row-reverse;
+}
 /* Specific RTL fixes for components */
 [dir="rtl"] .rounded-l-md {
   border-top-left-radius: 0;
@@ -229,9 +253,10 @@
 
 /* Arabic font improvements */
 [dir="rtl"] {
-  font-family: 'Segoe UI', 'Tahoma', 'Arial', 'Helvetica Neue', sans-serif;
+  font-family: 'Cairo', 'Amiri', 'Noto Sans Arabic', 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
   font-weight: 400;
   line-height: 1.6;
+  letter-spacing: 0.02em;
 }
 
 [dir="rtl"] h1,
@@ -242,24 +267,26 @@
 [dir="rtl"] h6 {
   font-weight: 600;
   line-height: 1.4;
+  letter-spacing: 0.01em;
 }
 
+/* Better Arabic text rendering */
+[dir="rtl"] .arabic-text {
+  font-feature-settings: "liga" 1, "kern" 1, "calt" 1;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Improved spacing for Arabic */
+[dir="rtl"] p,
+[dir="rtl"] span,
+[dir="rtl"] div {
+  word-spacing: 0.1em;
+}
 /* Chat bubble improvements for RTL */
-[dir="rtl"] .chat-user {
-  margin-left: 0;
-  margin-right: auto;
-}
-
-[dir="rtl"] .chat-assistant {
-  margin-right: 0;
-  margin-left: auto;
-}
 
 /* Sidebar improvements for RTL */
-[dir="rtl"] .sidebar-border-r {
-  border-right-width: 0;
-  border-left-width: 1px;
-}
 
 /* Animation and transition improvements */
 [dir="rtl"] .slide-in-from-left {
@@ -309,6 +336,25 @@
   text-align: start;
 }
 
+/* Better button alignment for RTL */
+[dir="rtl"] .btn-with-icon {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .btn-with-icon .icon {
+  margin-left: 0.5rem;
+  margin-right: 0;
+}
+
+/* Improved form layout for RTL */
+[dir="rtl"] .form-group {
+  text-align: right;
+}
+
+[dir="rtl"] .form-label {
+  text-align: right;
+  display: block;
+}
 /* Responsive RTL adjustments */
 @media (max-width: 768px) {
   [dir="rtl"] .mobile-rtl-fix {
@@ -318,6 +364,11 @@
   
   [dir="rtl"] .mobile-flex-reverse {
     flex-direction: row-reverse;
+  }
+  
+  [dir="rtl"] .mobile-sidebar {
+    right: 0;
+    left: auto;
   }
 }
 
@@ -360,7 +411,7 @@
 
 /* Ensure proper Arabic text rendering */
 [lang="ar"] {
-  font-family: 'Segoe UI', 'Tahoma', 'Arial', 'Helvetica Neue', sans-serif;
+  font-family: 'Cairo', 'Amiri', 'Noto Sans Arabic', 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
   font-feature-settings: "liga" 1, "kern" 1;
   text-rendering: optimizeLegibility;
 }

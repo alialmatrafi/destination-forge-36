@@ -202,7 +202,7 @@ export const ChatArea = ({
   return (
     <div className="flex flex-col h-full bg-background">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-border bg-card">
+      <div className="flex items-center justify-between p-4 border-b border-border bg-card [dir='rtl'] &:flex-row-reverse">
         <Button
           variant="ghost"
           size="sm"
@@ -243,17 +243,19 @@ export const ChatArea = ({
                 <div key={message.id} className="space-y-4">
                   <div
                     className={`flex ${
-                      message.role === 'user' ? 'justify-end' : 'justify-start'
+                      message.role === 'user' 
+                        ? 'justify-end [dir="rtl"] &:justify-start' 
+                        : 'justify-start [dir="rtl"] &:justify-end'
                     }`}
                   >
                     <div
                       className={`max-w-[80%] rounded-lg p-4 ${
                         message.role === 'user'
-                          ? 'bg-primary text-primary-foreground'
-                          : 'bg-muted'
+                          ? 'bg-primary text-primary-foreground chat-message-user'
+                          : 'bg-muted chat-message-assistant'
                       }`}
                     >
-                      <div className="whitespace-pre-wrap">{message.content}</div>
+                      <div className="whitespace-pre-wrap mixed-content">{message.content}</div>
                     </div>
                   </div>
                   
@@ -312,10 +314,10 @@ export const ChatArea = ({
                     ? t('chat.inputPlaceholder')
                     : t('chat.inputPlaceholderChat')
                 }
-                className="min-h-[60px] max-h-[120px] resize-none pr-12"
+                className="min-h-[60px] max-h-[120px] resize-none pr-12 [dir='rtl'] &:pl-12 [dir='rtl'] &:pr-3 form-rtl"
                 disabled={isLoading}
               />
-              <div className="absolute right-2 bottom-2">
+              <div className="absolute right-2 bottom-2 [dir='rtl'] &:left-2 [dir='rtl'] &:right-auto">
                 <VoiceRecordingButton
                   onTranscript={handleVoiceTranscript}
                   disabled={isLoading}
@@ -325,7 +327,7 @@ export const ChatArea = ({
             <Button
               onClick={() => handleSendMessage(inputValue)}
               disabled={!inputValue.trim() || isLoading}
-              className="h-[60px] px-6"
+              className="h-[60px] px-6 btn-with-icon"
             >
               <Send className="w-4 h-4" />
             </Button>

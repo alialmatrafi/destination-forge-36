@@ -5,6 +5,7 @@
   },
   "sidebar": {
     "title": "TravelAI",
+    "newChat": "محادثة جديدة",
     "searchPlaceholder": "البحث في المحادثات...",
     "noConversations": "لا توجد محادثات بعد",
     "startFirst": "ابدأ محادثتك الأولى",

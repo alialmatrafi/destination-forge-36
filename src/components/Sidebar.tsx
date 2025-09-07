@@ -53,9 +53,9 @@ export const Sidebar = ({
   };
 
   return (
-    <div className="w-80 bg-sidebar border-r border-sidebar-border flex flex-col h-full">
+    <div className="w-80 bg-sidebar border-r border-sidebar-border flex flex-col h-full sidebar-content">
       {/* Header */}
-      <div className="p-4 border-b border-sidebar-border">
+      <div className="p-4 border-b border-sidebar-border text-right">
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-xl font-bold text-sidebar-foreground">
             {t('sidebar.title')}
@@ -65,22 +65,22 @@ export const Sidebar = ({
 
         {/* Search */}
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground [dir='rtl'] &:right-3 [dir='rtl'] &:left-auto" />
           <Input
             placeholder={t('sidebar.searchPlaceholder')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 bg-background"
+            className="pl-10 bg-background [dir='rtl'] &:pr-10 [dir='rtl'] &:pl-3 form-rtl"
           />
         </div>
 
         {/* New Conversation Button */}
         <Button
           onClick={onNewConversation}
-          className="w-full mt-3 bg-primary hover:bg-primary-hover text-primary-foreground"
+          className="w-full mt-3 bg-primary hover:bg-primary-hover text-primary-foreground btn-with-icon"
         >
           <Plus className="w-4 h-4 mr-2" />
-          New Chat
+          {t('sidebar.newChat', 'محادثة جديدة')}
         </Button>
       </div>
 
@@ -104,7 +104,7 @@ export const Sidebar = ({
                 }`}
                 onClick={() => onSelectConversation(conversation.id)}
               >
-                <div className="flex items-start justify-between">
+                <div className="flex items-start justify-between [dir='rtl'] &:flex-row-reverse">
                   <div className="flex-1 min-w-0">
                     <h3 className="font-medium text-sm truncate">
                       {conversation.title}
@@ -134,7 +134,7 @@ export const Sidebar = ({
       {/* User Section */}
       <div className="p-4 border-t border-sidebar-border">
         {user ? (
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between [dir='rtl'] &:flex-row-reverse">
             <div className="flex items-center space-x-3">
               <Avatar className="w-8 h-8">
                 <AvatarFallback>
@@ -172,7 +172,7 @@ export const Sidebar = ({
               variant="outline"
               size="sm"
               onClick={() => setShowAuthModal(true)}
-              className="w-full"
+              className="w-full btn-with-icon"
             >
               <LogIn className="w-4 h-4 mr-2" />
               {t('auth.signIn')}

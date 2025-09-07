@@ -217,9 +217,9 @@ export const ItineraryTable = ({ itinerary: propItinerary, city = "Tokyo", onEdi
     }
   };
   return (
-    <Card className="w-full bg-card border-border shadow-medium [dir='rtl'] &:text-right" id="itinerary-content" dir="inherit">
-      <CardHeader className="border-b border-border p-4 sm:p-6">
-        <div className="flex items-center justify-between [dir='rtl'] &:flex-row-reverse">
+    <Card className="w-full bg-card border-border shadow-medium" id="itinerary-content">
+      <CardHeader className="border-b border-border p-4 sm:p-6 text-right">
+        <div className="flex items-center justify-between">
           <div>
             <CardTitle className="text-base sm:text-lg font-semibold text-foreground">
               {t('itinerary.title')} - {city}
@@ -228,7 +228,7 @@ export const ItineraryTable = ({ itinerary: propItinerary, city = "Tokyo", onEdi
               {t('itinerary.subtitle')}
             </p>
           </div>
-          <div className="text-right [dir='rtl'] &:text-left">
+          <div className="text-left [dir='rtl'] &:text-right">
             <div className="text-xl sm:text-2xl font-bold text-travel-blue">
               ${totalCost}
             </div>
@@ -242,8 +242,8 @@ export const ItineraryTable = ({ itinerary: propItinerary, city = "Tokyo", onEdi
       <CardContent className="p-0">
         {localItinerary.map((day, dayIndex) => (
           <div key={day.day} className="border-b border-border last:border-b-0">
-            <div className="bg-accent/50 px-4 sm:px-6 py-2 sm:py-3 border-b border-border">
-              <div className="flex items-center justify-between [dir='rtl'] &:flex-row-reverse">
+            <div className="bg-accent/50 px-4 sm:px-6 py-2 sm:py-3 border-b border-border text-right">
+              <div className="flex items-center justify-between">
                 <h3 className="font-medium text-foreground text-sm sm:text-base">
                   {t('itinerary.day')} {day.day} - {day.theme}
                 </h3>
@@ -254,9 +254,9 @@ export const ItineraryTable = ({ itinerary: propItinerary, city = "Tokyo", onEdi
             <div className="divide-y divide-border">
               {day.items.map((item, itemIndex) => (
                 <div key={itemIndex} className="px-4 sm:px-6 py-3 sm:py-4 hover:bg-accent/30 transition-colors group">
-                  <div className="flex items-start justify-between gap-2 sm:gap-4 [dir='rtl'] &:flex-row-reverse">
+                  <div className="flex items-start justify-between gap-2 sm:gap-4">
                     <div className="flex-1">
-                      <div className="flex items-center gap-1 sm:gap-2 mb-2 flex-wrap [dir='rtl'] &:flex-row-reverse">
+                      <div className="flex items-center gap-1 sm:gap-2 mb-2 flex-wrap">
                         <Clock className="w-4 h-4 text-muted-foreground" />
                         <span className="text-xs sm:text-sm font-medium text-foreground">
                           {item.time}
@@ -272,7 +272,7 @@ export const ItineraryTable = ({ itinerary: propItinerary, city = "Tokyo", onEdi
                         {item.activity}
                       </h4>
                       
-                      <div className="flex items-center gap-1 text-xs sm:text-sm [dir='rtl'] &:flex-row-reverse">
+                      <div className="flex items-center gap-1 text-xs sm:text-sm">
                         <MapPin className="w-3 h-3" />
                         <a
                           href={createGoogleMapsUrl(item.location, item.activity)}
