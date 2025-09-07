@@ -398,6 +398,8 @@ export const ItineraryTable = ({ itinerary: propItinerary, city = "Tokyo", onEdi
   );
 };
 
+export const Sidebar = ItineraryTable;
+
 interface EditItemFormProps {
   item: ItineraryItem;
   onSave: (item: ItineraryItem) => void;
